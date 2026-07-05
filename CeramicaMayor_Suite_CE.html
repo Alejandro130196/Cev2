@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cerámica Mayor · Suite de Marcado CE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#f9f3e6; --olive:#5d6758; --clay:#a37047; --sand:#e4d6bd; --slate:#7687a5;
+    --ink:#2c2a26; --white:#fffdf8; --green:#7a9070; --amber:#d9a441; --red:#c1685c; --line:#d9cbb0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; font-size:14.5px; line-height:1.5;}
+  h1,h2,h3{font-family:'Playfair Display',serif; margin:0 0 8px 0; color:var(--olive);}
+  a{color:var(--clay);}
+  .topbar{display:flex; align-items:center; gap:16px; padding:16px 26px; background:var(--olive); color:var(--white); position:sticky; top:0; z-index:60;}
+  .logo{width:42px; height:42px; border-radius:8px; background:var(--clay); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:18px; color:var(--white); flex-shrink:0; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);}
+  .topbar h1{color:var(--white); font-size:18.5px; margin:0;}
+  .topbar .sub{font-size:11.5px; opacity:.82; letter-spacing:.03em;}
+  .topbar .spacer{flex:1;}
+  .storage-flag{font-size:11px; padding:4px 10px; border-radius:12px; background:rgba(255,255,255,.15); white-space:nowrap;}
+  .tabs{display:flex; gap:2px; padding:0 26px; background:var(--sand); border-bottom:1px solid var(--line); position:sticky; top:74px; z-index:55; overflow-x:auto;}
+  .tab-btn{padding:12px 18px; border:none; background:transparent; cursor:pointer; font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px; color:var(--olive); border-bottom:3px solid transparent; opacity:.62; white-space:nowrap;}
+  .tab-btn.active{opacity:1; border-bottom-color:var(--clay); background:var(--bg);}
+  .wrap{max-width:1120px; margin:0 auto; padding:24px 22px 100px 22px;}
+  .card{background:var(--white); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin-bottom:18px;}
+  .card > h2{font-size:18px; border-bottom:2px solid var(--sand); padding-bottom:9px; margin-bottom:14px;}
+  .card > h3{font-size:15px; margin-top:4px;}
+  .card > .desc{font-size:12.5px; color:#726b5d; margin-bottom:12px; font-style:italic;}
+  label{display:block; font-size:11.5px; font-weight:600; color:var(--olive); margin-bottom:4px; text-transform:uppercase; letter-spacing:.02em;}
+  input[type=text], input[type=date], input[type=number], textarea, select{
+    width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:6px; font-family:'Inter',sans-serif;
+    font-size:13.2px; background:var(--bg); color:var(--ink); margin-bottom:11px;
+  }
+  textarea{resize:vertical; min-height:42px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:0 16px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:0 14px;}
+  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:4px;}
+  .kpi-card{background:var(--white); border:1px solid var(--line); border-radius:10px; padding:16px 16px; text-align:left;}
+  .kpi-card .kpi-val{font-family:'Playfair Display',serif; font-size:28px; color:var(--olive); font-weight:700; line-height:1;}
+  .kpi-card .kpi-label{font-size:11.5px; color:#726b5d; margin-top:6px; text-transform:uppercase; letter-spacing:.02em;}
+  .kpi-card.warn .kpi-val{color:var(--red);}
+  table{width:100%; border-collapse:collapse; font-size:12.3px;}
+  th, td{border:1px solid var(--line); padding:6px 8px; vertical-align:top;}
+  th{background:var(--olive); color:var(--white); font-weight:600; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.02em;}
+  td input, td textarea, td select{margin:0; padding:5px 6px; font-size:12.3px; min-height:0;}
+  tr:nth-child(even) td{background:#faf6ee;}
+  .estado-Protegido{background:#e2ecdc !important; color:#3f5c34; font-weight:700;}
+  .estado-Pendiente{background:#f3dcd8 !important; color:#8a3a30; font-weight:700;}
+  .estado-Parcial{background:#f7e6c4 !important; color:#8a6a1f; font-weight:700;}
+  .estado-Cumple{background:#e2ecdc !important; color:#3f5c34; font-weight:700;}
+  .estado-Noaplica{background:#e6e2da !important; color:#726b5d; font-weight:700;}
+  .row-actions{white-space:nowrap; text-align:center;}
+  .btn{padding:8px 15px; border:none; border-radius:7px; font-weight:600; font-size:12.8px; cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap;}
+  .btn-primary{background:var(--clay); color:var(--white);}
+  .btn-primary:hover{background:#8f5f3a;}
+  .btn-secondary{background:var(--sand); color:var(--olive);}
+  .btn-secondary:hover{background:#d8c8a8;}
+  .btn-ghost{background:transparent; color:var(--red); border:1px solid var(--red);}
+  .btn-outline{background:transparent; color:var(--olive); border:1px solid var(--olive);}
+  .btn-sm{padding:4px 9px; font-size:11.3px;}
+  .toolbar{display:flex; gap:9px; margin-top:12px; flex-wrap:wrap; align-items:center;}
+  .progress-wrap{background:var(--sand); border-radius:20px; height:13px; overflow:hidden; margin:8px 0 3px 0;}
+  .progress-bar{height:100%; background:linear-gradient(90deg,var(--green),var(--olive)); transition:width .3s;}
+  .progress-label{font-size:11.5px; color:#726b5d; display:flex; justify-content:space-between;}
+  .badge{display:inline-block; padding:2px 9px; border-radius:20px; font-size:10.5px; font-weight:700;}
+  .badge-tipo{background:var(--slate); color:#fff;}
+  .checklist-item{display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--sand);}
+  .checklist-item input[type=checkbox]{margin-top:3px; width:16px; height:16px; accent-color:var(--olive); flex-shrink:0;}
+  .checklist-item .ci-text{font-size:13px;}
+  .step{border:1px solid var(--line); border-radius:9px; margin-bottom:11px; overflow:hidden; background:var(--white);}
+  .step-head{display:flex; align-items:center; gap:13px; padding:13px 16px; cursor:pointer;}
+  .step-head:hover{background:#fbf7ef;}
+  .step-num{width:28px; height:28px; border-radius:50%; background:var(--sand); color:var(--olive); display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Playfair Display',serif; flex-shrink:0; font-size:13px;}
+  .step.done .step-num{background:var(--green); color:#fff;}
+  .step-title{font-weight:700; font-size:14px; flex:1; color:var(--ink);}
+  .step-doc{font-size:11px; color:var(--clay); font-weight:600;}
+  .step-body{padding:0 16px 16px 57px; display:none; font-size:13px;}
+  .step.open .step-body{display:block;}
+  .step-body ul{margin:6px 0; padding-left:18px;}
+  .step-body li{margin-bottom:4px;}
+  .step-check{display:flex; align-items:center; gap:8px; margin-top:10px;}
+  .step-check input{width:16px; height:16px; accent-color:var(--olive);}
+  .footer-note{font-size:11px; color:#8a8272; text-align:center; padding:16px;}
+  .sticky-export{position:sticky; bottom:0; background:var(--olive); padding:12px 22px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; box-shadow:0 -4px 14px rgba(0,0,0,.12); z-index:50;}
+  .banner{background:#f7e6c4; border:1px solid var(--amber); color:#6b501c; padding:9px 16px; font-size:12.5px; border-radius:8px; margin:14px 22px 0 22px;}
+  .banner.banner-info{background:var(--sand); border:1px solid var(--clay); color:#5c4630;}
+  .machine-header{display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; margin-bottom:6px;}
+  .machine-header .mh-field{flex:1; min-width:160px;}
+  .save-indicator{font-size:11px; color:#8a8272; margin-left:auto; white-space:nowrap;}
+  .empty-state{text-align:center; padding:50px 20px; color:#8a8272;}
+  .modal-overlay{position:fixed; inset:0; background:rgba(44,42,38,.55); display:none; align-items:center; justify-content:center; z-index:200;}
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:var(--white); border-radius:12px; padding:24px; max-width:480px; width:92%; max-height:85vh; overflow-y:auto;}
+  .modal-box h3{margin-top:0;}
+  .plr-group{margin-bottom:14px;}
+  .plr-group .opt{display:block; padding:8px 10px; border:1px solid var(--line); border-radius:7px; margin-bottom:6px; cursor:pointer; font-size:12.8px;}
+  .plr-group .opt:hover{background:var(--bg);}
+  .plr-group input{width:auto; margin-right:8px; margin-bottom:0;}
+  .plr-result{background:var(--sand); border-radius:8px; padding:12px; text-align:center; font-size:15px; font-weight:700; color:var(--olive); margin:12px 0;}
+  .toast{position:fixed; bottom:76px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:9px 18px; border-radius:20px; font-size:12.5px; z-index:300; opacity:0; transition:opacity .25s;}
+  .toast.show{opacity:.95;}
+  .lib-panel{border:1px dashed var(--clay); border-radius:9px; padding:14px; margin-top:10px; background:#fbf7ef; display:none;}
+  .lib-panel.open{display:block;}
+  .lib-cat-title{font-weight:700; color:var(--olive); font-size:12.5px; margin:10px 0 4px 0; text-transform:uppercase;}
+  .lib-item{display:flex; gap:8px; align-items:flex-start; padding:5px 0; font-size:12.5px; border-bottom:1px solid var(--sand);}
+  .lib-item input{width:auto; margin:3px 0 0 0;}
+  .action-plan-row{display:flex; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--sand); font-size:12.8px; flex-wrap:wrap;}
+  .action-plan-row .apr-main{flex:1; min-width:220px;}
+  .apr-due{font-size:11.3px; color:#8a8272;}
+  .apr-due.overdue{color:var(--red); font-weight:700;}
+  .portfolio-table td.name-cell{font-weight:600;}
+  .mini-bar{width:70px; height:8px; background:var(--sand); border-radius:6px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:6px;}
+  .mini-bar > div{height:100%; background:var(--green);}
+  .std-type-A{color:#3f5c34; font-weight:700;}
+  .std-type-B1, .std-type-B2{color:#7687a5; font-weight:700;}
+  .std-type-C{color:var(--clay); font-weight:700;}
+  .collapsible-toggle{cursor:pointer; user-select:none; color:var(--clay); font-weight:600; font-size:12.8px;}
+  .collapsible-body{display:none; margin-top:12px;}
+  .collapsible-body.open{display:block;}
+  .danger-zone{border:1px solid var(--red); border-radius:9px; padding:14px; margin-top:16px; background:#fbf2f0;}
+  .loading-overlay{position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:500; font-family:'Playfair Display',serif; font-size:18px; color:var(--olive);}
+  select.inline-status{font-weight:700; font-size:12px;}
+  @media print{
+    .topbar,.tabs,.sticky-export,.toast,.modal-overlay,.lib-panel,.banner{display:none !important;}
+    .wrap{max-width:100%; padding:0;}
+    .card{border:none; page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay">Cargando Suite CE…</div>
+
+<div class="topbar">
+  <div class="logo">CM</div>
+  <div>
+    <h1>Cerámica Mayor · Suite de Marcado CE</h1>
+    <div class="sub">Dirección Técnica · Directiva 2006/42/CE · Reglamento (UE) 2023/1230</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="storage-flag" id="storageFlag">·</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="panel">🏠 Panel</button>
+  <button class="tab-btn" data-tab="evaluacion">📋 Evaluación</button>
+  <button class="tab-btn" data-tab="guia">🧭 Guía CE</button>
+  <button class="tab-btn" data-tab="normativa">📚 Normativa</button>
+  <button class="tab-btn" data-tab="datos">⚙️ Datos</button>
+</div>
+<div id="banner" class="banner" style="display:none;"></div>
+
+<!-- ===================== PANEL ===================== -->
+<div class="wrap tab-content" id="tab-panel">
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="card">
+    <h2>Nueva máquina</h2>
+    <div class="desc">Elige una plantilla para partir con la identificación, fases de vida, peligros típicos y funciones de seguridad ya precargadas. Podrás editarlo todo después.</div>
+    <div class="grid3">
+      <div><label>Plantilla</label><select id="newMachineTemplate"></select></div>
+      <div><label>Nombre de la máquina</label><input type="text" id="newMachineName" placeholder="Se autocompleta con la plantilla"></div>
+      <div><label>Responsable</label><input type="text" id="newMachineResp" placeholder="Nombre y cargo"></div>
+    </div>
+    <button class="btn btn-primary" onclick="uiCreateMachine()">+ Crear máquina</button>
+  </div>
+
+  <div class="card">
+    <h2>Portfolio de máquinas</h2>
+    <table class="portfolio-table">
+      <thead><tr><th>Nombre</th><th>Tipo</th><th>Responsable</th><th>Progreso</th><th>Estado</th><th>Actualizado</th><th style="width:190px;">Acciones</th></tr></thead>
+      <tbody id="portfolioBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Plan de acción — peligros pendientes en todo el portfolio</h2>
+    <div class="desc">Ordenado por fecha límite. Un peligro deja de aparecer aquí en cuanto se marca como Protegido en su máquina.</div>
+    <div id="actionPlanList"></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-secondary" onclick="exportPortfolioWord()">⬇ Exportar resumen del portfolio (Word)</button>
+    <button class="btn btn-secondary" onclick="exportPortfolioCSV()">⬇ Exportar CSV</button>
+  </div>
+</div>
+
+<!-- ===================== EVALUACIÓN ===================== -->
+<div class="wrap tab-content" id="tab-evaluacion" style="display:none;">
+  <div id="evalEmptyState" class="empty-state" style="display:none;">
+    <h3>No hay ninguna máquina seleccionada</h3>
+    <p>Ve al Panel y crea o selecciona una máquina para empezar su expediente CE.</p>
+    <button class="btn btn-primary" onclick="switchTab('panel')">Ir al Panel</button>
+  </div>
+
+  <div id="evalContent" style="display:none;">
+    <div class="card">
+      <div class="machine-header">
+        <div class="mh-field"><label>Máquina activa</label><select id="machineSelector" onchange="uiSwitchMachine(this.value)"></select></div>
+        <div class="mh-field"><label>Nombre</label><input type="text" id="mNombre"></div>
+        <div class="mh-field"><label>Responsable</label><input type="text" id="mResponsable"></div>
+        <div class="mh-field" style="max-width:180px;"><label>Estado del proyecto</label>
+          <select id="mEstadoProyecto">
+            <option>Borrador</option><option>En progreso</option><option>Pendiente revisión</option><option>Aprobado</option><option>Archivado</option>
+          </select>
+        </div>
+        <div class="save-indicator" id="saveIndicator">—</div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-secondary btn-sm" onclick="uiDuplicateMachine()">⧉ Duplicar</button>
+        <button class="btn btn-ghost btn-sm" onclick="uiDeleteMachine()">✕ Eliminar máquina</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>1 · Identificación del conjunto</h2>
+      <div class="grid2" id="idFields"></div>
+    </div>
+
+    <div class="card">
+      <h2>2 · Límites de la máquina (ISO 12100 §5)</h2>
+      <label>Límites de uso</label>
+      <textarea id="limUso" onchange="setLimite('uso', this.value)"></textarea>
+      <label>Límites de espacio</label>
+      <textarea id="limEspacio" onchange="setLimite('espacio', this.value)"></textarea>
+      <label>Límites de tiempo</label>
+      <textarea id="limTiempo" onchange="setLimite('tiempo', this.value)"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>3 · Fases de vida</h2>
+      <table><thead><tr><th style="width:26%">Fase</th><th>Descripción</th><th style="width:36px"></th></tr></thead>
+        <tbody id="fasesBody"></tbody>
+      </table>
+      <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="addFase()">+ Añadir fase</button>
+    </div>
+
+    <div class="card">
+      <h2>4 · Identificación de peligros</h2>
+      <div class="desc">Se listan TODOS los peligros, resueltos o no. Un peligro <b>Protegido</b> no se borra: queda documentado con la medida que lo mitiga.</div>
+      <div class="progress-label"><span id="hazProgressText"></span><span id="hazProgressPct"></span></div>
+      <div class="progress-wrap"><div class="progress-bar" id="hazProgressBar" style="width:0%"></div></div>
+      <div class="toolbar">
+        <input type="text" id="hazSearch" placeholder="Filtrar por texto o categoría…" style="max-width:260px; margin-bottom:0;" oninput="renderHazards()">
+        <button class="btn btn-outline btn-sm" onclick="toggleLibPanel()">📚 Añadir desde biblioteca</button>
+        <button class="btn btn-secondary btn-sm" onclick="addHazard()">+ Añadir peligro manual</button>
+      </div>
+      <div class="lib-panel" id="libPanel">
+        <input type="text" id="libSearch" placeholder="Buscar en la biblioteca…" oninput="renderLibPicker()">
+        <div id="libPickerList" style="max-height:260px; overflow-y:auto; margin-top:8px;"></div>
+        <div class="toolbar"><button class="btn btn-primary btn-sm" onclick="addSelectedFromLibrary()">Añadir seleccionados</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleLibPanel()">Cerrar</button></div>
+      </div>
+      <table style="margin-top:14px;">
+        <thead><tr>
+          <th style="width:11%">Categoría</th><th style="width:24%">Situación peligrosa</th><th style="width:15%">Daño potencial</th>
+          <th style="width:9%">Estado</th><th style="width:18%">Medida existente / prevista</th>
+          <th style="width:11%">Responsable</th><th style="width:9%">Fecha límite</th><th style="width:30px"></th>
+        </tr></thead>
+        <tbody id="hazardsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>5 · Calculadora de distancia de seguridad (EN ISO 13855)</h2>
+      <div class="desc">Estimador de apoyo: S = K × T + C. Verifica siempre el resultado contra la norma completa y la hoja de datos del dispositivo antes de instalar — la geometría de aproximación y las excepciones de la norma no están cubiertas por esta fórmula simplificada.</div>
+      <div class="grid3">
+        <div><label>Dispositivo / velocidad K</label>
+          <select id="distK" onchange="onDistKChange()">
+            <option value="1600">Barrera horizontal / escáner de área — 1600 mm/s</option>
+            <option value="2000">Cortina vertical (aproximación mano) — 2000 mm/s</option>
+            <option value="custom">Personalizado…</option>
+          </select>
+        </div>
+        <div><label>K personalizado (mm/s)</label><input type="number" id="distKCustom" placeholder="mm/s" disabled></div>
+        <div><label>Tiempo total de parada T (ms)</label><input type="number" id="distT" placeholder="ej. 250"></div>
+      </div>
+      <div class="grid3">
+        <div><label>Resolución del dispositivo d (mm) — opcional</label><input type="number" id="distD" placeholder="ej. 30" oninput="onDistDChange()"></div>
+        <div><label>Distancia adicional C (mm)</label><input type="number" id="distC" placeholder="mm"></div>
+        <div style="display:flex; align-items:flex-end;"><button class="btn btn-primary" style="margin-bottom:11px;" onclick="computeDistance()">Calcular S</button></div>
+      </div>
+      <div class="plr-result" id="distResult" style="display:none;"></div>
+    </div>
+
+    <div class="card">
+      <h2>6 · Validación SISTEMA — Nivel de Prestaciones (PL)</h2>
+      <div class="desc">Una fila por función de seguridad. Usa la calculadora de PLr (gráfico de riesgo EN ISO 13849-1 Anexo A) para no tener que estimarlo a ojo.</div>
+      <table>
+        <thead><tr>
+          <th style="width:19%">Función de seguridad</th><th style="width:9%">Categoría</th><th style="width:8%">PLr</th>
+          <th style="width:22%">Arquitectura / componentes</th><th style="width:8%">PL alcanzado</th><th style="width:9%">Conforme</th><th style="width:60px"></th>
+        </tr></thead>
+        <tbody id="sistemaBody"></tbody>
+      </table>
+      <div class="toolbar">
+        <select id="compLibSelect" style="max-width:280px; margin-bottom:0;"></select>
+        <button class="btn btn-outline btn-sm" onclick="insertFromComponentLibrary()">Insertar componente típico</button>
+        <button class="btn btn-secondary btn-sm" onclick="addSistema()">+ Añadir función manual</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>7 · Checklist de Requisitos Esenciales (Anexo I, Directiva 2006/42/CE)</h2>
+      <div class="desc">Marca cada requisito como Cumple, Pendiente o No aplica a esta máquina, con una breve evidencia.</div>
+      <div id="ehsrContainer"></div>
+    </div>
+
+    <div class="card">
+      <h2>8 · Checklist del expediente técnico CE</h2>
+      <div id="expedienteChecklist"></div>
+    </div>
+
+    <div class="card">
+      <h2>9 · Conclusión y firmas</h2>
+      <label>Decisión</label>
+      <select id="decision" onchange="setConclusion('decision', this.value)">
+        <option>Pendiente de evaluación</option><option>Autorizada la puesta en servicio</option><option>Pendiente de medidas adicionales</option>
+      </select>
+      <div class="grid2">
+        <div><label>Realizado por</label><input type="text" id="firmaRealiza" onchange="setConclusion('firmaRealiza', this.value)"></div>
+        <div><label>Fecha</label><input type="date" id="fechaRealiza" onchange="setConclusion('fechaRealiza', this.value)"></div>
+        <div><label>Revisado por</label><input type="text" id="firmaRevisa" onchange="setConclusion('firmaRevisa', this.value)"></div>
+        <div><label>Fecha</label><input type="date" id="fechaRevisa" onchange="setConclusion('fechaRevisa', this.value)"></div>
+        <div><label>Aprobado por</label><input type="text" id="firmaAprueba" onchange="setConclusion('firmaAprueba', this.value)"></div>
+        <div><label>Fecha</label><input type="date" id="fechaAprueba" onchange="setConclusion('fechaAprueba', this.value)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="collapsible-toggle" onclick="toggleLog()">▸ Historial de actividad de esta máquina</div>
+      <div class="collapsible-body" id="logBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== GUÍA CE ===================== -->
+<div class="wrap tab-content" id="tab-guia" style="display:none;">
+  <div id="guideEmptyState" class="empty-state" style="display:none;">
+    <h3>Selecciona una máquina en el Panel para ver su guía</h3>
+    <button class="btn btn-primary" onclick="switchTab('panel')">Ir al Panel</button>
+  </div>
+  <div id="guideContent" style="display:none;">
+    <div class="card">
+      <h2>Guía técnica para el marcado CE — <span id="guideMachineName"></span></h2>
+      <div class="desc">Sigue el orden. Cada paso indica la norma aplicable y qué documento o herramienta de esta app lo resuelve.</div>
+      <div class="progress-label"><span id="guideProgressText"></span><span id="guideProgressPct"></span></div>
+      <div class="progress-wrap"><div class="progress-bar" id="guideProgressBar" style="width:0%"></div></div>
+    </div>
+    <div id="stepsContainer"></div>
+  </div>
+</div>
+
+<!-- ===================== NORMATIVA ===================== -->
+<div class="wrap tab-content" id="tab-normativa" style="display:none;">
+  <div class="card">
+    <h2>Biblioteca de normas armonizadas</h2>
+    <div class="desc">Tipo A = principios generales · Tipo B = un aspecto o dispositivo de seguridad concreto, válido para muchas máquinas · Tipo C = norma específica de una familia de máquina (prevalece sobre A y B si existe).</div>
+    <table>
+      <thead><tr><th style="width:16%">Norma</th><th style="width:8%">Tipo</th><th style="width:38%">Título</th><th>Aplicabilidad en Cerámica Mayor</th></tr></thead>
+      <tbody id="standardsBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Biblioteca maestra de peligros</h2>
+    <div class="desc">Estos son los peligros disponibles para añadir con un clic desde cualquier máquina (pestaña Evaluación → Identificación de peligros). Edítala aquí para toda la organización.</div>
+    <table>
+      <thead><tr><th style="width:14%">Categoría</th><th style="width:28%">Situación peligrosa</th><th style="width:20%">Daño potencial</th><th style="width:28%">Medida sugerida</th><th style="width:30px"></th></tr></thead>
+      <tbody id="hazLibBody"></tbody>
+    </table>
+    <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="addLibHazard()">+ Añadir a la biblioteca</button>
+  </div>
+
+  <div class="card">
+    <h2>Biblioteca de componentes de seguridad típicos</h2>
+    <div class="desc">Puntos de partida para la tabla SISTEMA. El PL indicado es orientativo — siempre debe verificarse con la hoja de datos real del componente instalado.</div>
+    <table>
+      <thead><tr><th style="width:24%">Componente</th><th style="width:16%">Categoría típica</th><th style="width:10%">PL típico</th><th>Nota</th><th style="width:30px"></th></tr></thead>
+      <tbody id="compLibBody"></tbody>
+    </table>
+    <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="addLibComponent()">+ Añadir componente</button>
+  </div>
+</div>
+
+<!-- ===================== DATOS ===================== -->
+<div class="wrap tab-content" id="tab-datos" style="display:none;">
+  <div class="card">
+    <h2>Copia de seguridad</h2>
+    <div class="desc">Esta app guarda todo automáticamente según el entorno donde se ejecute (mira el indicador arriba a la derecha). Aun así, exporta una copia JSON de vez en cuando — es la única forma de mover el portfolio entre ordenadores o compartirlo con el equipo.</div>
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="exportAllJSON()">⬇ Exportar todo (JSON)</button>
+      <label class="btn btn-secondary" style="cursor:pointer;">⬆ Importar copia (JSON)<input type="file" accept=".json" style="display:none;" onchange="importAllJSON(this.files[0])"></label>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Mantenimiento</h2>
+    <div class="toolbar">
+      <button class="btn btn-outline" onclick="rebuildIndex()">🔧 Reconstruir índice del portfolio</button>
+    </div>
+    <p style="font-size:12px; color:#726b5d;">Útil si el Panel no coincide con las máquinas guardadas. Vuelve a leer todas las máquinas del almacenamiento y recalcula el índice.</p>
+    <div class="danger-zone">
+      <h3 style="color:var(--red); margin-top:0;">Zona de riesgo</h3>
+      <p style="font-size:12.5px;">Elimina todas las máquinas y bibliotecas guardadas aquí. No se puede deshacer.</p>
+      <button class="btn btn-ghost" onclick="wipeAllData()">Borrar todos los datos</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ACTION BAR ===================== -->
+<div class="sticky-export" id="actionBar"></div>
+<div class="footer-note">Cerámica Mayor · Dirección Técnica · PR-DT-CE · Guardado automático activo (ver indicador arriba). Exporta una copia JSON periódicamente desde la pestaña Datos.</div>
+
+<!-- ===================== PLr MODAL ===================== -->
+<div class="modal-overlay" id="plrModal">
+  <div class="modal-box">
+    <h3>Calculadora de PLr — Gráfico de riesgo (EN ISO 13849-1, Anexo A)</h3>
+    <div class="plr-group">
+      <label>Gravedad de la lesión (S)</label>
+      <label class="opt"><input type="radio" name="plrS" value="S1" onchange="updatePlrResult()"> S1 — Leve (normalmente reversible)</label>
+      <label class="opt"><input type="radio" name="plrS" value="S2" onchange="updatePlrResult()"> S2 — Grave, incluida la muerte (normalmente irreversible)</label>
+    </div>
+    <div class="plr-group">
+      <label>Frecuencia y/o duración de exposición (F)</label>
+      <label class="opt"><input type="radio" name="plrF" value="F1" onchange="updatePlrResult()"> F1 — Rara a frecuente, exposición corta (≤ 1 vez/15 min)</label>
+      <label class="opt"><input type="radio" name="plrF" value="F2" onchange="updatePlrResult()"> F2 — Frecuente a continua, exposición larga</label>
+    </div>
+    <div class="plr-group">
+      <label>Posibilidad de evitar el peligro (P)</label>
+      <label class="opt"><input type="radio" name="plrP" value="P1" onchange="updatePlrResult()"> P1 — Posible bajo condiciones específicas</label>
+      <label class="opt"><input type="radio" name="plrP" value="P2" onchange="updatePlrResult()"> P2 — Apenas posible</label>
+    </div>
+    <div class="plr-result" id="plrResultBox">Selecciona las tres variables</div>
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="usePlrResult()">Usar este PLr</button>
+      <button class="btn btn-ghost" onclick="closePlrModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   DATOS MAESTROS
+   ========================================================================= */
+
+const STANDARDS_LIBRARY = [
+  {codigo:"EN ISO 12100:2010", tipo:"A", titulo:"Principios generales de diseño. Evaluación y reducción del riesgo.", aplica:"Todas las máquinas. Es la norma base de todo el expediente CE."},
+  {codigo:"EN ISO 13849-1:2015", tipo:"B1", titulo:"Partes de los sistemas de mando relativas a la seguridad. Principios de diseño.", aplica:"Cualquier función de seguridad (paradas de emergencia, enclavamientos, escáneres). Determina el PL."},
+  {codigo:"EN ISO 13849-2:2012", tipo:"B1", titulo:"Validación de los sistemas de mando relativos a la seguridad.", aplica:"Verificación práctica de que el PL calculado se cumple en la instalación real."},
+  {codigo:"EN ISO 13850:2015", tipo:"B1", titulo:"Parada de emergencia. Principios de diseño.", aplica:"Toda máquina con seta de emergencia."},
+  {codigo:"EN ISO 13857:2019", tipo:"B1", titulo:"Distancias de seguridad frente al alcance de miembros superiores e inferiores.", aplica:"Diseño de vallados y aberturas de resguardos."},
+  {codigo:"EN 60204-1:2018", tipo:"B1", titulo:"Seguridad del equipo eléctrico de las máquinas.", aplica:"Todo el cuadro y cableado eléctrico de la máquina."},
+  {codigo:"EN ISO 13855:2010", tipo:"B2", titulo:"Posicionamiento de los medios de protección según la velocidad de aproximación.", aplica:"Cálculo de distancia mínima de escáneres, cortinas y alfombras (ver calculadora en Evaluación)."},
+  {codigo:"EN ISO 14119:2013", tipo:"B2", titulo:"Dispositivos de enclavamiento asociados a resguardos.", aplica:"Selección e instalación de interruptores de enclavamiento en vallados."},
+  {codigo:"EN ISO 14120:2015", tipo:"B2", titulo:"Requisitos generales para el diseño y construcción de resguardos.", aplica:"Vallados fijos y móviles."},
+  {codigo:"EN 61496-1", tipo:"B2", titulo:"Equipos de protección electrosensibles (escáneres, cortinas ópticas).", aplica:"Selección de escáneres de área y cortinas fotoeléctricas."},
+  {codigo:"EN ISO 10218-1:2011 / -2:2011", tipo:"C", titulo:"Robots industriales. Requisitos de seguridad e integración de células robotizadas.", aplica:"UR20 y cualquier célula robotizada."},
+  {codigo:"Norma tipo C específica", tipo:"C", titulo:"Cada familia de máquina puede tener su propia norma tipo C (prensas, hornos, líneas de decoración...).", aplica:"Verificar en la Declaración CE del proveedor qué norma tipo C aplicó antes de asumir que solo aplican A+B."},
+];
+
+const EHSR_TEMPLATE = [
+  {section:"1.1 Generalidades", items:[
+    {clause:"1.1.2", title:"Principios de integración de la seguridad (eliminar/reducir riesgos por diseño)"},
+    {clause:"1.1.3", title:"Materiales y productos empleados, sin riesgo para la salud"},
+    {clause:"1.1.4", title:"Iluminación incorporada si es necesaria para la operación"},
+    {clause:"1.1.5", title:"Diseño que facilite su manipulación y transporte seguro"},
+    {clause:"1.1.6", title:"Ergonomía (postura, esfuerzo, visibilidad de mandos)"},
+  ]},
+  {section:"1.2 Sistemas de mando", items:[
+    {clause:"1.2.1", title:"Seguridad y fiabilidad de los sistemas de mando"},
+    {clause:"1.2.2", title:"Órganos de accionamiento identificables, visibles y ergonómicos"},
+    {clause:"1.2.3", title:"Puesta en marcha solo mediante accionamiento voluntario"},
+    {clause:"1.2.4", title:"Parada normal y parada de emergencia correctamente implementadas"},
+    {clause:"1.2.5", title:"Selector de modo de funcionamiento bloqueable"},
+    {clause:"1.2.6", title:"Fallo de alimentación de energía no genera situación peligrosa"},
+  ]},
+  {section:"1.3 Riesgos mecánicos", items:[
+    {clause:"1.3.1", title:"Riesgo de pérdida de estabilidad"},
+    {clause:"1.3.2", title:"Riesgo de rotura durante el funcionamiento"},
+    {clause:"1.3.3", title:"Riesgos por caída o proyección de objetos"},
+    {clause:"1.3.4", title:"Riesgos por superficies, aristas o ángulos"},
+    {clause:"1.3.7", title:"Riesgos relacionados con elementos móviles"},
+    {clause:"1.3.8", title:"Elección de protección adecuada contra elementos móviles"},
+    {clause:"1.3.9", title:"Riesgo de movimientos incontrolados"},
+  ]},
+  {section:"1.4 Resguardos y dispositivos de protección", items:[
+    {clause:"1.4.1", title:"Requisitos generales de resguardos y dispositivos"},
+    {clause:"1.4.2", title:"Requisitos especiales para resguardos fijos/móviles"},
+    {clause:"1.4.3", title:"Requisitos especiales para dispositivos de protección"},
+  ]},
+  {section:"1.5 Otros riesgos", items:[
+    {clause:"1.5.1", title:"Energía eléctrica"},
+    {clause:"1.5.2", title:"Electricidad estática"},
+    {clause:"1.5.3", title:"Energía distinta de la eléctrica (neumática, hidráulica)"},
+    {clause:"1.5.4", title:"Errores de montaje"},
+    {clause:"1.5.5", title:"Temperaturas extremas"},
+    {clause:"1.5.6", title:"Incendio"},
+    {clause:"1.5.7", title:"Explosión"},
+    {clause:"1.5.8", title:"Ruido"},
+    {clause:"1.5.9", title:"Vibraciones"},
+    {clause:"1.5.10", title:"Radiaciones"},
+    {clause:"1.5.13", title:"Emisión de materiales y sustancias peligrosas (polvo, gases)"},
+    {clause:"1.5.14", title:"Riesgo de quedar atrapado en la máquina"},
+    {clause:"1.5.15", title:"Riesgo de deslizar, tropezar o caer"},
+  ]},
+  {section:"1.6 Mantenimiento", items:[
+    {clause:"1.6.1", title:"Mantenimiento de la máquina sin riesgo innecesario"},
+    {clause:"1.6.2", title:"Acceso a puestos de trabajo y de intervención"},
+    {clause:"1.6.3", title:"Separación de las fuentes de energía (LOTO)"},
+    {clause:"1.6.4", title:"Intervención del operador controlada"},
+    {clause:"1.6.5", title:"Limpieza de partes internas sin apertura de resguardos"},
+  ]},
+  {section:"1.7 Información", items:[
+    {clause:"1.7.1", title:"Información y advertencias en la máquina"},
+    {clause:"1.7.2", title:"Advertencia sobre riesgos residuales"},
+    {clause:"1.7.3", title:"Marcado (placa CE, datos del fabricante)"},
+    {clause:"1.7.4", title:"Manual de instrucciones completo (ES)"},
+  ]},
+];
+
+const EXPEDIENTE_ITEMS = [
+  "Análisis de riesgos completo según EN ISO 12100 (este documento)",
+  "Validación SISTEMA / cálculo PL según EN ISO 13849-1 para cada función de seguridad",
+  "Esquemas eléctricos y de seguridad en SolidWorks Electrical (.proj)",
+  "Programa de control documentado (estructura, lógica de seguridad, comunicaciones)",
+  "Manual de instrucciones del conjunto (ES), con riesgos residuales incluidos",
+  "Declaración CE de Conformidad del conjunto, firmada por el responsable del diseño",
+  "Certificados / declaraciones CE de los componentes integrados",
+  "Lista de materiales (BOM) con referencias completas",
+  "Registro de pruebas de validación (parada de emergencia, enclavamientos) con resultado y fecha",
+  "Marcado CE físico colocado en la máquina",
+];
+
+const GUIDE_STEPS = [
+  {title:"Definir los límites de la máquina", ref:"ISO 12100 §5", doc:"Sección 2 de Evaluación",
+    text:"Fija con precisión los límites de uso, espacio y tiempo antes de identificar peligros. Un límite mal definido invalida el resto del análisis.",
+    items:["Límites de uso: tarea prevista y usos indebidos a excluir explícitamente","Límites de espacio: envolvente de trabajo, distancias EN ISO 13855/13857","Límites de tiempo: vida útil, mantenimiento, vida de componentes de seguridad"]},
+  {title:"Listar las fases de vida", ref:"ISO 12100 §5.4", doc:"Sección 3 de Evaluación",
+    text:"Cada fase (transporte, instalación, puesta en marcha, funcionamiento normal, mantenimiento, fallo, desmantelamiento) puede introducir peligros distintos. El mantenimiento y el modo manual concentran la mayoría de accidentes graves.", items:[]},
+  {title:"Identificar los peligros por categoría", ref:"ISO 12100 Anexo B", doc:"Sección 4 + Biblioteca de peligros",
+    text:"Usa el botón 'Añadir desde biblioteca' para no partir de cero, y documenta TODOS los peligros, resueltos o no.", items:[]},
+  {title:"Estimar el riesgo inicial", ref:"ISO 12100 §6 (matriz P×S)", doc:"—",
+    text:"Para cada peligro sin protección, estima Probabilidad × Severidad con la misma escala que la evaluación de riesgos laborales (RD 1215/1997), para mantener coherencia entre ambos expedientes.", items:[]},
+  {title:"Aplicar la jerarquía de reducción de riesgo", ref:"ISO 12100 §6.1", doc:"Columna 'Medida' de la sección 4",
+    text:"Orden obligatorio: 1) eliminar por diseño, 2) proteger (resguardos/dispositivos), 3) informar (señalización, manual, formación).", items:[]},
+  {title:"Reevaluar el riesgo residual", ref:"ISO 12100 §6", doc:"Columna 'Estado' de la sección 4",
+    text:"Tras aplicar la medida, reevalúa. Si sigue siendo importante, vuelve al paso anterior. Solo se marca Protegido si el riesgo residual es aceptable.", items:[]},
+  {title:"Validar las funciones de seguridad con SISTEMA", ref:"EN ISO 13849-1", doc:"Sección 6 + calculadora de PLr integrada",
+    text:"Usa la calculadora de PLr (gráfico de riesgo S/F/P) integrada en la sección 6, y compárala con el PL calculado en el software SISTEMA a partir del MTTFd y DC reales de cada componente.", items:[]},
+  {title:"Calcular las distancias de seguridad", ref:"EN ISO 13855 / EN ISO 13857", doc:"Sección 5 (calculadora)",
+    text:"Para cada dispositivo optoelectrónico (escáner, cortina) usa la calculadora de la sección 5 como estimación inicial, y verifica el resultado final contra el datasheet del fabricante.", items:[]},
+  {title:"Completar el checklist de Requisitos Esenciales", ref:"Directiva 2006/42/CE, Anexo I", doc:"Sección 7",
+    text:"Repasa cada cláusula del Anexo I y marca Cumple / Pendiente / No aplica. Es un paso distinto y obligatorio, no lo cubre solo el análisis de riesgos.", items:[]},
+  {title:"Preparar los esquemas eléctricos", ref:"Estándar interno / IEC 60617", doc:"SolidWorks Electrical (.proj)",
+    text:"Usa la plantilla estándar de Cerámica Mayor. El esquema debe reflejar exactamente la arquitectura de seguridad validada — cualquier cambio obliga a revalidar el PL.", items:[]},
+  {title:"Redactar el manual de instrucciones", ref:"Directiva 2006/42/CE, Anexo I", doc:"Manual ES",
+    text:"Incluye descripción, instalación, uso previsto y excluido, mantenimiento, y los riesgos residuales que quedaron en estado 'Moderado' tras la sección 4.", items:[]},
+  {title:"Reunir las declaraciones CE de componentes integrados", ref:"Directiva 2006/42/CE", doc:"Certificados de proveedor", text:"Cada componente con marcado CE propio debe aportar su Declaración CE o de Incorporación.", items:[]},
+  {title:"Redactar la Declaración CE de Conformidad del conjunto", ref:"Directiva 2006/42/CE, Anexo II", doc:"Botón 'Declaración CE' de esta app",
+    text:"Esta app puede generar un borrador a partir de los datos ya introducidos — revísalo y complétalo antes de firmar.", items:[]},
+  {title:"Colocar el marcado CE físico", ref:"Directiva 2006/42/CE, Anexo III", doc:"Placa en la máquina", text:"Visible, legible e indeleble, colocado antes de la puesta en servicio.", items:[]},
+  {title:"Archivar el expediente técnico completo", ref:"Directiva 2006/42/CE, Anexo VII", doc:"Checklist sección 8",
+    text:"Conservar disponible durante al menos 10 años desde la fabricación del último ejemplar.", items:[]},
+];
+
+const DEFAULT_HAZARD_LIBRARY = [
+  ["Mecánico","Atrapamiento entre partes móviles y fijas","Aplastamiento, fractura","Resguardo fijo o enclavado en el punto de atrapamiento"],
+  ["Mecánico","Corte por bordes afilados o herramientas de corte","Herida incisa","Resguardo o redondeo de bordes"],
+  ["Mecánico","Aplastamiento entre elementos móviles","Aplastamiento de extremidades","Distancias EN ISO 13857 o enclavamiento"],
+  ["Mecánico","Impacto por proyección de piezas o fragmentos","Contusión, lesión ocular","Pantalla de protección + EPI"],
+  ["Mecánico","Arrastre por ejes o acoplamientos rotativos","Arrastre, lesión grave","Resguardo en ejes rotativos accesibles"],
+  ["Mecánico","Perforación o punzonamiento por elementos punzantes","Herida punzante","Rediseño o resguardo del elemento"],
+  ["Mecánico","Cizallamiento entre partes móviles","Amputación","Enclavamiento + distancia de seguridad"],
+  ["Eléctrico","Contacto directo con partes activas","Electrocución, quemaduras","Procedimiento LOTO antes de intervenir"],
+  ["Eléctrico","Contacto indirecto por fallo de aislamiento","Electrocución","Verificación periódica de continuidad de tierras"],
+  ["Eléctrico","Arco eléctrico durante maniobra en tensión","Quemaduras graves","EPI Arc Flash + procedimiento de maniobra"],
+  ["Eléctrico","Energía residual almacenada (condensadores, muelles)","Electrocución o golpe inesperado","Verificar tiempo de descarga en LOTO"],
+  ["Térmico","Contacto con superficies calientes","Quemadura","Señalización + tiempo de enfriamiento"],
+  ["Térmico","Contacto con superficies muy frías","Quemadura por frío","Señalización + EPI"],
+  ["Térmico","Proyección de material fundido o caliente","Quemadura, lesión ocular","Pantalla de protección"],
+  ["Ruido/Vibración","Exposición a ruido continuo","Pérdida auditiva","Medición de nivel sonoro + EPI"],
+  ["Ruido/Vibración","Exposición a vibración mano-brazo o cuerpo entero","Trastorno músculo-esquelético","Evaluación de exposición periódica"],
+  ["Radiación","Radiación láser","Lesión ocular o cutánea","Clasificación del láser + EPI específico"],
+  ["Radiación","Radiación no ionizante (campos electromagnéticos)","Efectos en portadores de implantes activos","Señalización + distancia de exclusión"],
+  ["Ambiental","Inhalación de polvo o partículas","Afección respiratoria","Aspiración localizada + EPI respiratorio"],
+  ["Ambiental","Contacto con sustancias químicas o tintas","Irritación cutánea/ocular","EPI + ficha de seguridad del producto"],
+  ["Ambiental","Emisión de gases de combustión","Intoxicación","Ventilación forzada + detector de gases"],
+  ["Ergonómico","Postura forzada","Trastorno músculo-esquelético","Evaluación ergonómica del puesto"],
+  ["Ergonómico","Manipulación manual de cargas","Sobreesfuerzo","Ayuda mecánica de carga"],
+  ["Ergonómico","Movimientos repetitivos","Trastorno músculo-esquelético","Rotación de tareas"],
+  ["Ergonómico","Iluminación insuficiente en el puesto","Error de percepción, accidente","Verificar nivel lux del puesto"],
+  ["Software/Control","Fallo de lógica de control","Comportamiento no esperado de la máquina","Revisión y validación formal del programa"],
+  ["Software/Control","Pérdida de comunicación entre dispositivos","Movimiento no controlado","Watchdog de comunicación con parada segura"],
+  ["Software/Control","Bypass no autorizado de una función de seguridad","Exposición directa al peligro original","Restringir acceso a la lógica de seguridad"],
+  ["Software/Control","Arranque intempestivo tras rearme","Atrapamiento o impacto al reanudar","Confirmación positiva de zona despejada antes de rearme"],
+  ["Fallo de función de seguridad","Fallo de parada de emergencia","Imposibilidad de detener la máquina","Verificar categoría según EN ISO 13850"],
+  ["Fallo de función de seguridad","Fallo de enclavamiento","Acceso no controlado a zona peligrosa","Validar PL alcanzado con SISTEMA"],
+  ["Fallo de función de seguridad","Fallo de dispositivo optoelectrónico (escáner/cortina)","Intrusión no detectada","Validar PL + calcular distancia EN ISO 13855"],
+  ["Fallo de función de seguridad","Rearme automático no intencionado","Movimiento inesperado al recuperar energía","Verificar lógica de rearme manual obligatorio"],
+  ["Combinado/Acumulativo","Concurrencia de energías residuales durante mantenimiento","Lesión grave por concurrencia de riesgos","LOTO ampliado a todas las energías presentes"],
+];
+
+const DEFAULT_COMPONENT_LIBRARY = [
+  ["Seta de emergencia + relé de seguridad","Categoría 3","d","Doble canal con contactos guiados. Verificar MTTFd/DC en la hoja de datos del relé."],
+  ["Interruptor de enclavamiento con enganche","Categoría 3–4","d–e","EN ISO 14119. El PL depende de si es de canal único o doble."],
+  ["Escáner de área láser","Categoría 3","d","Verificar campo de protección y tiempo de respuesta en el datasheet."],
+  ["Cortina fotoeléctrica tipo 4","Categoría 4","e","EN 61496-1. La resolución determina la distancia mínima (EN ISO 13855)."],
+  ["Mando bimanual tipo IIIC","Categoría 4","e","Sincronismo entre pulsadores <0,5s. Un mando por operario en la zona."],
+  ["PLC de seguridad / relé configurable","Categoría 4","e","Arquitectura redundante con diagnóstico. Verificar certificación del fabricante."],
+];
+
+const ID_FIELD_DEFS = [
+  ["denom","Denominación del conjunto", true],
+  ["integrador","Fabricante / Integrador responsable", false],
+  ["responsable","Persona física responsable del diseño", false],
+  ["ubicacion","Ubicación / línea de producción", false],
+  ["componentes","Componentes integrados con marcado CE propio", true],
+  ["normativa","Normativa de referencia", true],
+  ["evaluador","Evaluador / equipo de evaluación", false],
+];
+
+const MACHINE_TEMPLATES = {
+  robot: {
+    label: "Célula robotizada (cobot/robot)",
+    id: {denom:"Célula robotizada de corte y colocación — UR20", integrador:"Cerámica Mayor — Dirección Técnica (integrador)", responsable:"", ubicacion:"",
+      componentes:"UR20 (marcado CE como cuasi-máquina) + PLC Omron NX102 + utillaje de sujeción + vallado perimetral",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN ISO 10218-1/-2 · EN ISO 13854/13857", evaluador:""},
+    fases: [["Transporte e instalación","Recepción, montaje en bancada, fijación de utillaje, cableado Modbus TCP al PLC."],
+      ["Puesta en marcha / Teaching","Programación, enseñanza manual de waypoints con el operario en el espacio de trabajo."],
+      ["Funcionamiento normal (automático)","Ciclo automático, handshaking con el PLC, sin presencia humana en zona de trabajo."],
+      ["Funcionamiento manual / ajuste","Movimientos manuales (jog) con velocidad reducida."],
+      ["Mantenimiento preventivo/correctivo","Acceso con energía bloqueada (LOTO), sustitución de efector, limpieza."],
+      ["Fallo / parada de emergencia","Activación de seta, pérdida de comunicación, posición no controlada del brazo."],
+      ["Desmantelamiento","Retirada del robot y utillaje al final de vida útil."]],
+    hazards: [
+      ["Mecánico","Atrapamiento brazo-vallado / brazo-utillaje","Aplastamiento, fractura","Protegido","Vallado perimetral + enclavamiento de puerta"],
+      ["Mecánico","Atrapamiento efector-pieza/bancada","Aplastamiento de extremidades","Protegido","Distancias EN ISO 13857 + diseño del efector"],
+      ["Mecánico","Corte en bordes del efector o cuchilla","Herida cortante","Pendiente","Definir protección o redondeo de bordes"],
+      ["Mecánico","Impacto por brazo en movimiento","Contusión, traumatismo","Protegido","Vallado + escáner de área"],
+      ["Mecánico","Caída de pieza sujetada (fallo de pinza/vacío)","Golpe por objeto","Pendiente","Verificar redundancia del sistema de vacío"],
+      ["Eléctrico","Contacto directo armario en mantenimiento","Electrocución, quemaduras","Protegido","Procedimiento LOTO PR-DT-SEG-LOTO-01"],
+      ["Eléctrico","Energía residual almacenada tras desconexión","Electrocución","Pendiente","Verificar tiempo de descarga en LOTO"],
+      ["Software","Movimiento inesperado por error de programación","Colisión","Parcial","Revisión de código; falta validación formal"],
+      ["Software","Pérdida de comunicación (handshake)","Movimiento no controlado","Protegido","Watchdog con Protective Stop"],
+      ["Software","Arranque tras rearme sin verificar zona despejada","Impacto al reanudar","Pendiente","Confirmación positiva antes de rearme"],
+      ["Ergonómico","Acceso a zona en automático por fallo de resguardo","Atrapamiento sin aviso","Protegido","Enclavamiento + escáner de área"],
+      ["Ambiental","Polvo de proceso en sensores","Fallo de detección","Pendiente","Sistema de aspiración localizada"],
+      ["Fallo función seguridad","Fallo de parada de emergencia (categoría incorrecta)","Imposibilidad de parar","Pendiente","Verificar categoría EN ISO 13850"],
+      ["Ruido/Vibración","Ruido del ciclo de trabajo","Pérdida auditiva por exposición","Pendiente","Medición de nivel sonoro + EPI"],
+    ],
+    sistema: [["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""],
+      ["Enclavamiento de vallado perimetral","3","d","Interruptor de seguridad con bloqueo","",""],
+      ["Protective Stop por escáner de área","3","d","Escáner láser de seguridad","",""],
+      ["Watchdog de comunicación","","c","Lógica de control con timeout","",""]],
+  },
+  extrusora: {
+    label: "Extrusora cerámica",
+    id: {denom:"Extrusora de vacío para pasta cerámica", integrador:"Cerámica Mayor — Dirección Técnica (si se modifica/integra)", responsable:"", ubicacion:"",
+      componentes:"Motor principal de husillo, bomba de vacío, variadores, PLC de control, sensores de presión/nivel",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN 953 · EN ISO 13857", evaluador:""},
+    fases: [["Transporte e instalación","Anclaje a bancada, conexión eléctrica, neumática/hidráulica y de vacío, nivelación."],
+      ["Puesta en marcha / ajuste inicial","Cebado, ajuste de vacío y velocidad de husillo, montaje de boquilla, pruebas."],
+      ["Funcionamiento normal (automático)","Alimentación continua de pasta, extrusión bajo vacío, corte a la salida."],
+      ["Funcionamiento manual / ajuste","Ajuste de boquilla, purga o cambio de referencia con máquina en marcha lenta."],
+      ["Limpieza y mantenimiento","Apertura de camisa, limpieza de cámara de vacío, sustitución de cuchillas — con LOTO."],
+      ["Desatasco / incidencia de proceso","Atasco en tolva o cámara de vacío, intervención manual en zona de riesgo."],
+      ["Fallo / parada de emergencia","Activación de seta, pérdida de vacío, sobrecarga del motor con la máquina en marcha."],
+      ["Desmantelamiento","Retirada de la extrusora al final de su vida útil."]],
+    hazards: [
+      ["Mecánico","Atrapamiento en tolva de alimentación","Amputación, aplastamiento","Pendiente","Rejilla de resguardo con enclavamiento — verificar diseño"],
+      ["Mecánico","Atrapamiento por husillo dentro de la camisa","Amputación, lesión mortal","Pendiente","LOTO obligatorio + enclavamiento de camisa"],
+      ["Mecánico","Corte por cuchilla de corte a la salida","Herida incisa","Pendiente","Resguardo fijo/móvil en zona de corte"],
+      ["Mecánico","Aplastamiento en cambio de boquilla","Aplastamiento de manos","Pendiente","Procedimiento LOTO + utillaje seguro"],
+      ["Mecánico","Proyección de pasta o fragmentos a presión","Contusión, lesión ocular","Pendiente","Pantalla de protección + EPI ocular"],
+      ["Eléctrico","Contacto directo cuadro/variador motor principal","Electrocución, quemaduras","Protegido","Procedimiento LOTO PR-DT-SEG-LOTO-01"],
+      ["Mecánico/presión","Liberación incontrolada de vacío/sobrepresión","Lesión por onda de presión","Pendiente","Válvula de seguridad + presostato con corte"],
+      ["Térmico","Contacto con carcasa de motor/reductor","Quemadura","Pendiente","Señalización + tiempo de enfriamiento"],
+      ["Software","Arranque tras rearme sin verificar camisa cerrada","Atrapamiento, amputación","Pendiente","Confirmación positiva de cierre antes de rearme"],
+      ["Software","Bypass no autorizado de protección de tolva/camisa","Exposición al husillo en marcha","Pendiente","Restringir acceso a lógica de seguridad del PLC"],
+      ["Ergonómico","Alimentación manual de pasta sin resguardo","Atrapamiento de manos","Pendiente","Rediseñar punto de carga con resguardo"],
+      ["Ambiental","Polvo de sílice/arcilla en carga y corte","Silicosis","Pendiente","Aspiración localizada + EPI respiratorio"],
+      ["Fallo función seguridad","Fallo de enclavamiento de camisa del husillo","Exposición al husillo en movimiento","Pendiente","Validar PL alcanzado — SISTEMA"],
+      ["Ambiental","Suelo resbaladizo por pasta/agua","Caída al mismo nivel","Pendiente","Pavimento antideslizante + limpieza periódica"],
+    ],
+    sistema: [["Enclavamiento rejilla de tolva","3","d","Interruptor de seguridad + resguardo","",""],
+      ["Enclavamiento camisa del husillo","3","d","Interruptor de seguridad con bloqueo","",""],
+      ["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""],
+      ["Presostato de vacío (detección de pérdida)","","b","Sensor + lógica de corte en PLC","",""]],
+  },
+  prensa: {
+    label: "Prensa de conformado",
+    id: {denom:"Prensa hidráulica de conformado cerámico", integrador:"Cerámica Mayor — Dirección Técnica (si se modifica/integra)", responsable:"", ubicacion:"",
+      componentes:"Bomba hidráulica, PLC de seguridad, mando bimanual, cortina fotoeléctrica",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN 60204-1 · EN 61496-1", evaluador:""},
+    fases: [["Transporte e instalación","Anclaje a bancada, conexión hidráulica y eléctrica."],
+      ["Puesta en marcha / ajuste de molde","Montaje de molde/matriz, ajuste de carrera y presión."],
+      ["Funcionamiento normal (ciclo de prensado)","Ciclo automático con mando bimanual o cortina en el punto de acceso."],
+      ["Cambio de molde/matriz","Sustitución de utillaje con la máquina detenida."],
+      ["Mantenimiento hidráulico","Intervención en bomba, válvulas y mangueras — con LOTO."],
+      ["Fallo / parada de emergencia","Activación de seta, fallo de válvula, descenso no controlado del plato."],
+      ["Desmantelamiento","Retirada de la prensa al final de su vida útil."]],
+    hazards: [
+      ["Mecánico","Aplastamiento entre platos durante el ciclo","Aplastamiento grave, amputación","Pendiente","Mando bimanual + cortina fotoeléctrica en zona de acceso"],
+      ["Mecánico","Atrapamiento en cambio de molde/matriz","Aplastamiento de manos","Pendiente","LOTO + soportes mecánicos de bloqueo del plato"],
+      ["Hidráulico","Fuga o rotura de manguera a alta presión","Inyección de fluido, quemadura química","Pendiente","Revisión periódica de mangueras y racores"],
+      ["Hidráulico","Descenso incontrolado del plato por fallo de válvula","Aplastamiento por caída del plato","Pendiente","Válvula de retención + bloqueo mecánico en mantenimiento"],
+      ["Eléctrico","Contacto directo con cuadro de la bomba hidráulica","Electrocución","Protegido","Procedimiento LOTO PR-DT-SEG-LOTO-01"],
+      ["Ruido/Vibración","Impacto de prensado","Pérdida auditiva, fatiga","Pendiente","Medición de nivel sonoro + EPI"],
+      ["Software","Fallo del mando bimanual (bypass o desincronización)","Activación accidental del ciclo","Pendiente","Verificar sincronismo <0,5s"],
+      ["Fallo función seguridad","Fallo de la cortina fotoeléctrica de acceso","Acceso no detectado a zona de prensado","Pendiente","Validar PL alcanzado — SISTEMA"],
+      ["Ergonómico","Carga/descarga manual junto al punto de prensado","Trastorno músculo-esquelético, atrapamiento","Pendiente","Automatizar carga o aumentar distancia de seguridad"],
+      ["Fallo función seguridad","Fallo de parada de emergencia por categoría incorrecta","Imposibilidad de detener el ciclo","Pendiente","Verificar categoría EN ISO 13850"],
+    ],
+    sistema: [["Mando bimanual","4 (tipo IIIC)","d","Mando bimanual homologado + relé de seguridad","",""],
+      ["Cortina fotoeléctrica de acceso","4","d","Cortina óptica tipo 4 (EN 61496-1)","",""],
+      ["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""]],
+  },
+  horno: {
+    label: "Horno de cocción",
+    id: {denom:"Horno de rodillos — línea de cocción", integrador:"Cerámica Mayor — Dirección Técnica (si se modifica/integra)", responsable:"", ubicacion:"",
+      componentes:"Quemadores de gas natural, variadores de rodillos, PLC de zonas térmicas",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN 60204-1 · Normativa de aparatos de gas aplicable", evaluador:""},
+    fases: [["Instalación","Montaje de la línea de rodillos y conexión de gas/electricidad."],
+      ["Arranque en frío / precalentamiento","Secuencia de encendido de quemadores y calentamiento gradual."],
+      ["Funcionamiento continuo","Cocción en ciclo continuo con transporte de piezas por rodillos."],
+      ["Mantenimiento con horno frío","Intervenciones programadas con el horno parado y frío."],
+      ["Mantenimiento con horno caliente","Inspecciones puntuales con el horno en producción."],
+      ["Fallo de llama / parada de emergencia","Corte de gas, fallo de encendido, parada de emergencia."],
+      ["Desmantelamiento","Retirada del horno al final de su vida útil."]],
+    hazards: [
+      ["Térmico","Contacto con carcasa o zonas de carga/descarga a alta temperatura","Quemadura grave","Pendiente","Señalización + barreras físicas en zonas de acceso"],
+      ["Térmico","Apertura de compuertas de inspección con el horno caliente","Quemadura por radiación/contacto","Pendiente","Procedimiento de apertura con EPI térmico"],
+      ["Explosión/Incendio","Fuga de gas natural o fallo de encendido","Explosión, incendio","Pendiente","Válvula de corte automática + detector de llama + purga previa"],
+      ["Atmósfera peligrosa","Acumulación de CO u otros gases de combustión","Intoxicación","Pendiente","Ventilación forzada + detector de CO en sala"],
+      ["Mecánico","Atrapamiento en rodillos de transporte de piezas","Aplastamiento de manos","Pendiente","Resguardos en puntos de entrada/salida de rodillos"],
+      ["Eléctrico","Contacto con resistencias auxiliares o cuadro de control","Electrocución, quemadura","Protegido","Procedimiento LOTO PR-DT-SEG-LOTO-01"],
+      ["Fallo función seguridad","Fallo del detector de llama (no corta el gas)","Explosión por acumulación de gas no quemado","Pendiente","Verificar periodicidad de calibración del detector"],
+      ["Ergonómico","Manipulación manual cerca de zona de carga a alta temperatura","Quemadura, estrés térmico","Pendiente","EPI térmico + rotación de tareas"],
+      ["Fallo función seguridad","Fallo de parada de emergencia por categoría incorrecta","Imposibilidad de detener el horno","Pendiente","Verificar categoría EN ISO 13850"],
+    ],
+    sistema: [["Corte automático de gas por fallo de llama","3","d","Válvula de corte + detector de llama UV/IR","",""],
+      ["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""]],
+  },
+  secadero: {
+    label: "Secadero",
+    id: {denom:"Secadero de piezas en verde", integrador:"Cerámica Mayor — Dirección Técnica (si se modifica/integra)", responsable:"", ubicacion:"",
+      componentes:"Ventiladores de recirculación, resistencias/quemador, cadena o cinta de transporte, PLC de control",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN 60204-1", evaluador:""},
+    fases: [["Instalación","Montaje de la estructura y conexión eléctrica/térmica."],
+      ["Funcionamiento continuo","Transporte de piezas a través del túnel de secado."],
+      ["Mantenimiento","Intervenciones en ventiladores, resistencias o cadena — con LOTO."],
+      ["Limpieza","Retirada de residuos y polvo acumulado."],
+      ["Fallo / parada de emergencia","Activación de seta, sobretemperatura, atasco de cadena."]],
+    hazards: [
+      ["Mecánico","Atrapamiento en cadena/cinta de transporte de piezas","Aplastamiento de manos","Pendiente","Resguardos en puntos de entrada/salida"],
+      ["Térmico","Contacto con superficies calientes o flujo de aire caliente","Quemadura","Pendiente","Señalización + aislamiento térmico"],
+      ["Eléctrico","Contacto con cuadro de resistencias/ventiladores","Electrocución","Protegido","Procedimiento LOTO PR-DT-SEG-LOTO-01"],
+      ["Ambiental","Humedad combinada con instalación eléctrica","Electrocución por fallo de aislamiento","Pendiente","Verificar grado IP de los equipos eléctricos"],
+      ["Ruido/Vibración","Ruido de ventiladores de recirculación","Pérdida auditiva por exposición","Pendiente","Medición de nivel sonoro + EPI"],
+      ["Ambiental","Polvo en zona de carga/descarga","Irritación respiratoria","Pendiente","Aspiración localizada"],
+      ["Fallo función seguridad","Fallo de enclavamiento de puertas de acceso","Acceso a cadena en movimiento","Pendiente","Validar PL alcanzado — SISTEMA"],
+    ],
+    sistema: [["Enclavamiento de puertas de acceso","3","d","Interruptor de seguridad con bloqueo","",""],
+      ["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""]],
+  },
+  kerajet: {
+    label: "Línea de decoración digital",
+    id: {denom:"Línea de decoración digital (inyección de tinta)", integrador:"Cerámica Mayor — Dirección Técnica (si se modifica/integra)", responsable:"", ubicacion:"",
+      componentes:"Cabezales de inyección de tinta, cinta transportadora, controlador OPC-UA",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2 · EN 60204-1", evaluador:""},
+    fases: [["Instalación","Montaje de la línea y conexión del controlador."],
+      ["Puesta en marcha / calibración de cabezales","Ajuste de altura y alineación de los cabezales de impresión."],
+      ["Funcionamiento automático","Transporte e impresión continua de baldosas."],
+      ["Mantenimiento de cabezales","Limpieza y sustitución de cabezales — con energía bloqueada."],
+      ["Limpieza","Retirada de restos de tinta y residuos."],
+      ["Fallo / parada de emergencia","Activación de seta, pérdida de comunicación OPC-UA."]],
+    hazards: [
+      ["Mecánico","Atrapamiento en cinta transportadora de baldosas","Aplastamiento de dedos/mano","Pendiente","Resguardos + enclavamiento en puntos de acceso"],
+      ["Químico","Contacto con tinta cerámica durante mantenimiento de cabezales","Irritación cutánea/ocular","Pendiente","EPI (guantes, gafas) + ficha de seguridad de la tinta"],
+      ["Eléctrico","Contacto con controlador o cuadro de cabezales en mantenimiento","Electrocución","Pendiente","LOTO + verificación de descarga de circuitos piezoeléctricos"],
+      ["Ergonómico","Manipulación manual de baldosas en carga/descarga","Trastorno músculo-esquelético","Pendiente","Evaluar automatización de carga"],
+      ["Software","Fallo de comunicación OPC-UA con el controlador","Parada no controlada o desincronización","Parcial","Definir watchdog de comunicación (Node-RED/Python)"],
+      ["Fallo función seguridad","Fallo de enclavamiento de acceso a zona de cabezales","Contacto con cabezales en movimiento","Pendiente","Validar PL alcanzado — SISTEMA"],
+      ["Fallo función seguridad","Fallo de parada de emergencia por categoría incorrecta","Imposibilidad de detener la línea","Pendiente","Verificar categoría EN ISO 13850"],
+    ],
+    sistema: [["Enclavamiento de acceso a cabezales","3","d","Interruptor de seguridad con bloqueo","",""],
+      ["Parada de emergencia (seta)","3","d","Relé de seguridad + contactos guiados","",""]],
+  },
+  generico: {
+    label: "Otra máquina / genérico",
+    id: {denom:"", integrador:"Cerámica Mayor — Dirección Técnica", responsable:"", ubicacion:"", componentes:"",
+      normativa:"Directiva 2006/42/CE (Rgto. UE 2023/1230 desde 20/01/2027) · EN ISO 12100 · EN ISO 13849-1/-2", evaluador:""},
+    fases: [["Transporte e instalación",""],["Puesta en marcha",""],["Funcionamiento normal",""],["Funcionamiento manual / ajuste",""],
+      ["Mantenimiento",""],["Fallo / parada de emergencia",""],["Desmantelamiento",""]],
+    hazards: [["Mecánico","","","Pendiente",""],["Eléctrico","","","Pendiente",""],["Software / control","","","Pendiente",""],["Fallo de función de seguridad","","","Pendiente",""]],
+    sistema: [["Parada de emergencia (seta)","3","d","","",""]],
+  },
+};
+
+const PLR_MAP = {"S1-F1-P1":"a","S1-F1-P2":"b","S1-F2-P1":"b","S1-F2-P2":"c","S2-F1-P1":"c","S2-F1-P2":"d","S2-F2-P1":"d","S2-F2-P2":"e"};
+
+/* =========================================================================
+   ALMACENAMIENTO — 3 niveles según el entorno donde se ejecute:
+   1) window.storage  → dentro de Claude.ai (artefacto)
+   2) localStorage    → desplegado en GitHub Pages / Netlify / cualquier dominio real
+   3) memoria (RAM)   → último recurso si el navegador bloquea todo lo anterior
+   ========================================================================= */
+const STORAGE_MODE = (function(){
+  if(typeof window.storage !== "undefined" && window.storage && typeof window.storage.get === "function") return "artifact";
+  try{
+    const k = "__cm_ce_probe__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return "local";
+  }catch(e){ return "memory"; }
+})();
+const memoryStore = {};
+const KEY_INDEX = "cm-ce-index";
+const KEY_HAZLIB = "cm-ce-hazlib";
+const KEY_COMPLIB = "cm-ce-complib";
+const KEY_MACHINE = id => "cm-ce-m-" + id;
+
+async function stGet(key){
+  if(STORAGE_MODE === "artifact"){ try{ const r = await window.storage.get(key, false); return r ? r.value : null; }catch(e){ return null; } }
+  if(STORAGE_MODE === "local"){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+  return memoryStore[key] !== undefined ? memoryStore[key] : null;
+}
+async function stSet(key, value){
+  if(STORAGE_MODE === "artifact"){ try{ const r = await window.storage.set(key, value, false); return !!r; }catch(e){ console.error("storage.set failed", key, e); return false; } }
+  if(STORAGE_MODE === "local"){ try{ localStorage.setItem(key, value); return true; }catch(e){ console.error("localStorage.setItem failed", key, e); return false; } }
+  memoryStore[key] = value; return true;
+}
+async function stDelete(key){
+  if(STORAGE_MODE === "artifact"){ try{ await window.storage.delete(key, false); return true; }catch(e){ return false; } }
+  if(STORAGE_MODE === "local"){ try{ localStorage.removeItem(key); return true; }catch(e){ return false; } }
+  delete memoryStore[key]; return true;
+}
+async function stList(prefix){
+  if(STORAGE_MODE === "artifact"){ try{ const r = await window.storage.list(prefix, false); return r ? r.keys : []; }catch(e){ return []; } }
+  if(STORAGE_MODE === "local"){
+    try{ const keys=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.startsWith(prefix)) keys.push(k); } return keys; }catch(e){ return []; }
+  }
+  return Object.keys(memoryStore).filter(k=>k.startsWith(prefix));
+}
+async function stGetJSON(key){ const raw = await stGet(key); return raw ? JSON.parse(raw) : null; }
+async function stSetJSON(key, obj){ return stSet(key, JSON.stringify(obj)); }
+
+/* =========================================================================
+   ESTADO
+   ========================================================================= */
+let state = {
+  index: [],
+  hazardLibrary: [],
+  componentLibrary: [],
+  current: null,
+  activeTab: "panel",
+  saveTimer: null,
+  libPickerSelected: new Set(),
+  plrTargetIndex: null,
+};
+
+function uid(){ return "id_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8); }
+function escapeHtml(str){ return (str==null?"":String(str)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function escapeAttr(str){ return escapeHtml(str).replace(/"/g,"&quot;"); }
+function fmtDate(ts){ if(!ts) return "—"; const d=new Date(ts); return d.toLocaleDateString('es-ES')+" "+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function showToast(msg){
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(showToast._tm); showToast._tm = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* =========================================================================
+   CRUD DE MÁQUINAS
+   ========================================================================= */
+function createMachineFromTemplate(key, nombre, responsable){
+  const t = MACHINE_TEMPLATES[key];
+  const now = Date.now();
+  return {
+    id: uid(), nombre: nombre && nombre.trim() ? nombre.trim() : t.label, tipo: key, responsable: responsable || "",
+    estadoProyecto: "Borrador", createdAt: now, updatedAt: now,
+    identificacion: Object.assign({}, t.id),
+    limites: {uso:"", espacio:"", tiempo:""},
+    fases: t.fases.map(f=>({fase:f[0], desc:f[1]})),
+    hazards: t.hazards.map(h=>({id:uid(), cat:h[0], situacion:h[1], dano:h[2], estado:h[3], medida:h[4], responsable:"", fechaLimite:""})),
+    sistema: t.sistema.map(s=>({id:uid(), funcion:s[0], categoria:s[1], plr:s[2], arquitectura:s[3], pl:s[4], conforme:s[5]})),
+    ehsr: EHSR_TEMPLATE.map(sec=>({section:sec.section, items:sec.items.map(it=>Object.assign({}, it, {estado:"Pendiente", evidencia:""}))})),
+    expediente: EXPEDIENTE_ITEMS.map(()=>false),
+    distanciaCalc: {K:1600, Kcustom:"", T:"", d:"", C:"", resultado:null},
+    stepsDone: new Array(GUIDE_STEPS.length).fill(false),
+    conclusion: {decision:"Pendiente de evaluación", firmaRealiza:"", fechaRealiza:"", firmaRevisa:"", fechaRevisa:"", firmaAprueba:"", fechaAprueba:""},
+    activityLog: [{ts:now, text:"Máquina creada desde plantilla '"+t.label+"'"}],
+  };
+}
+
+function computeHazardStats(m){
+  const total = m.hazards.length;
+  const protegido = m.hazards.filter(h=>h.estado==="Protegido").length;
+  const pct = total ? Math.round(protegido/total*100) : 0;
+  return {total, protegido, pct};
+}
+
+function machineSummary(m){
+  const stats = computeHazardStats(m);
+  return {
+    id:m.id, nombre:m.nombre, tipo:m.tipo, responsable:m.responsable, estadoProyecto:m.estadoProyecto,
+    updatedAt:m.updatedAt, pct:stats.pct, total:stats.total, protegido:stats.protegido,
+    pendientes: m.hazards.filter(h=>h.estado!=="Protegido").map(h=>({situacion:h.situacion, cat:h.cat, estado:h.estado, responsable:h.responsable||"", fechaLimite:h.fechaLimite||""})),
+  };
+}
+
+function logActivity(m, text){
+  m.activityLog = m.activityLog || [];
+  m.activityLog.push({ts:Date.now(), text});
+  if(m.activityLog.length > 40) m.activityLog = m.activityLog.slice(-40);
+}
+
+async function saveMachine(m){
+  m.updatedAt = Date.now();
+  await stSetJSON(KEY_MACHINE(m.id), m);
+  const idx = state.index.findIndex(x=>x.id===m.id);
+  const summ = machineSummary(m);
+  if(idx>=0) state.index[idx] = summ; else state.index.push(summ);
+  await stSetJSON(KEY_INDEX, state.index);
+}
+
+function scheduleSave(){
+  document.getElementById('saveIndicator').textContent = "Guardando…";
+  clearTimeout(state.saveTimer);
+  state.saveTimer = setTimeout(async ()=>{
+    if(!state.current) return;
+    await saveMachine(state.current);
+    document.getElementById('saveIndicator').textContent = "Guardado ✓ " + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    renderKpis(); renderPortfolioTable(); renderActionPlan();
+  }, 800);
+}
+
+async function selectMachine(id){
+  const m = await stGetJSON(KEY_MACHINE(id));
+  if(!m) return;
+  if(!m.ehsr) m.ehsr = EHSR_TEMPLATE.map(sec=>({section:sec.section, items:sec.items.map(it=>Object.assign({}, it, {estado:"Pendiente", evidencia:""}))}));
+  if(!m.expediente) m.expediente = EXPEDIENTE_ITEMS.map(()=>false);
+  if(!m.distanciaCalc) m.distanciaCalc = {K:1600, Kcustom:"", T:"", d:"", C:"", resultado:null};
+  if(!m.activityLog) m.activityLog = [];
+  state.current = m;
+  renderEvaluacion();
+  renderGuide();
+}
+
+/* =========================================================================
+   INICIALIZACIÓN
+   ========================================================================= */
+async function initApp(){
+  if(STORAGE_MODE === "artifact"){
+    document.getElementById('storageFlag').textContent = "💾 Guardado automático (Claude)";
+  } else if(STORAGE_MODE === "local"){
+    document.getElementById('storageFlag').textContent = "💾 Guardado en este navegador";
+    const b = document.getElementById('banner');
+    b.style.display = "block"; b.classList.add('banner-info');
+    b.textContent = "Los datos se guardan en el navegador de este ordenador (localStorage), no en un servidor compartido. Si Jesús, Luis o Gaspar abren esta misma página en OTRO ordenador, verán un portfolio vacío — no el tuyo. Usa Datos → Exportar JSON para compartir o migrar el portfolio entre equipos.";
+  } else {
+    document.getElementById('storageFlag').textContent = "⚠ Sin persistencia";
+    const b = document.getElementById('banner');
+    b.style.display = "block";
+    b.textContent = "⚠ Este navegador no permite guardar datos (modo privado o almacenamiento bloqueado). Los cambios se perderán al cerrar la pestaña — exporta a JSON con frecuencia (pestaña Datos).";
+  }
+
+  let idx = await stGetJSON(KEY_INDEX);
+  if(!idx || !Array.isArray(idx) || idx.length===0){
+    const m1 = createMachineFromTemplate('robot', 'Célula robotizada de corte y colocación — UR20');
+    const m2 = createMachineFromTemplate('extrusora', 'Extrusora de vacío para pasta cerámica');
+    state.index = [];
+    await saveMachine(m1);
+    await saveMachine(m2);
+    idx = state.index;
+  }
+  state.index = idx;
+
+  let hazlib = await stGetJSON(KEY_HAZLIB);
+  if(!hazlib){ hazlib = DEFAULT_HAZARD_LIBRARY.map(h=>({id:uid(), cat:h[0], situacion:h[1], dano:h[2], medida:h[3]})); await stSetJSON(KEY_HAZLIB, hazlib); }
+  state.hazardLibrary = hazlib;
+
+  let complib = await stGetJSON(KEY_COMPLIB);
+  if(!complib){ complib = DEFAULT_COMPONENT_LIBRARY.map(c=>({id:uid(), nombre:c[0], categoria:c[1], plr:c[2], nota:c[3]})); await stSetJSON(KEY_COMPLIB, complib); }
+  state.componentLibrary = complib;
+
+  populateTemplateSelect();
+  renderKpis(); renderPortfolioTable(); renderActionPlan();
+  renderStandards(); renderHazardLibraryTab(); renderComponentLibraryTab();
+
+  if(state.index.length){ await selectMachine(state.index[0].id); }
+
+  document.getElementById('loadingOverlay').style.display = "none";
+  switchTab('panel');
+}
+
+function populateTemplateSelect(){
+  const sel = document.getElementById('newMachineTemplate');
+  sel.innerHTML = Object.keys(MACHINE_TEMPLATES).map(k=>`<option value="${k}">${escapeHtml(MACHINE_TEMPLATES[k].label)}</option>`).join('');
+}
+
+/* =========================================================================
+   TABS Y ACTION BAR
+   ========================================================================= */
+document.querySelectorAll(".tab-btn").forEach(btn=> btn.addEventListener("click", ()=> switchTab(btn.dataset.tab)) );
+
+function switchTab(tab){
+  state.activeTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+  document.querySelectorAll(".tab-content").forEach(c=> c.style.display = "none");
+  document.getElementById("tab-"+tab).style.display = "block";
+  if(tab === "evaluacion"){ renderEvaluacion(); }
+  if(tab === "guia"){ renderGuide(); }
+  renderActionBar();
+  window.scrollTo({top:0, behavior:"instant"});
+}
+
+function renderActionBar(){
+  const bar = document.getElementById('actionBar');
+  if(state.activeTab === "panel"){
+    bar.innerHTML = `<button class="btn btn-primary" onclick="document.getElementById('newMachineName').focus()">+ Nueva máquina</button>`;
+  } else if(state.activeTab === "evaluacion" && state.current){
+    bar.innerHTML = `
+      <button class="btn btn-secondary" onclick="flushSaveNow()">💾 Guardar ahora</button>
+      <button class="btn btn-primary" onclick="exportMachineWord()">⬇ Exportar Word</button>
+      <button class="btn btn-secondary" onclick="exportDeclaracionCE()">📄 Declaración CE</button>
+      <button class="btn btn-outline" onclick="window.print()">🖨 Imprimir / PDF</button>`;
+  } else {
+    bar.innerHTML = "";
+  }
+}
+
+/* =========================================================================
+   PANEL
+   ========================================================================= */
+function renderKpis(){
+  const n = state.index.length;
+  const avgPct = n ? Math.round(state.index.reduce((a,m)=>a+m.pct,0)/n) : 0;
+  const pendTotal = state.index.reduce((a,m)=>a + m.pendientes.length, 0);
+  const overdue = state.index.reduce((a,m)=> a + m.pendientes.filter(p=>p.fechaLimite && p.fechaLimite < todayISO()).length, 0);
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi-card"><div class="kpi-val">${n}</div><div class="kpi-label">Máquinas en el portfolio</div></div>
+    <div class="kpi-card"><div class="kpi-val">${avgPct}%</div><div class="kpi-label">Protección media</div></div>
+    <div class="kpi-card ${pendTotal>0?'warn':''}"><div class="kpi-val">${pendTotal}</div><div class="kpi-label">Peligros pendientes (portfolio)</div></div>
+    <div class="kpi-card ${overdue>0?'warn':''}"><div class="kpi-val">${overdue}</div><div class="kpi-label">Acciones con fecha vencida</div></div>`;
+}
+
+function renderPortfolioTable(){
+  const tbody = document.getElementById('portfolioBody');
+  tbody.innerHTML = state.index.map(m=>`
+    <tr>
+      <td class="name-cell">${escapeHtml(m.nombre)}</td>
+      <td><span class="badge badge-tipo">${escapeHtml(MACHINE_TEMPLATES[m.tipo]?MACHINE_TEMPLATES[m.tipo].label:m.tipo)}</span></td>
+      <td>${escapeHtml(m.responsable||"—")}</td>
+      <td><span class="mini-bar"><div style="width:${m.pct}%"></div></span>${m.pct}%</td>
+      <td>${escapeHtml(m.estadoProyecto)}</td>
+      <td style="font-size:11px;">${fmtDate(m.updatedAt)}</td>
+      <td class="row-actions">
+        <button class="btn btn-secondary btn-sm" onclick="uiOpenMachine('${m.id}')">Abrir</button>
+        <button class="btn btn-outline btn-sm" onclick="uiDuplicateMachineById('${m.id}')">⧉</button>
+        <button class="btn btn-ghost btn-sm" onclick="uiDeleteMachineById('${m.id}')">✕</button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="7" style="text-align:center; color:#8a8272;">Aún no hay máquinas. Crea la primera arriba.</td></tr>`;
+}
+
+function renderActionPlan(){
+  let items = [];
+  state.index.forEach(m=>{
+    m.pendientes.forEach(p=> items.push(Object.assign({machineName:m.nombre, machineId:m.id}, p)) );
+  });
+  items.sort((a,b)=>{
+    if(a.fechaLimite && b.fechaLimite) return a.fechaLimite.localeCompare(b.fechaLimite);
+    if(a.fechaLimite) return -1; if(b.fechaLimite) return 1; return 0;
+  });
+  const wrap = document.getElementById('actionPlanList');
+  if(!items.length){ wrap.innerHTML = `<p style="color:#8a8272; font-size:13px;">No hay peligros pendientes en ningún proyecto. 🎉</p>`; return; }
+  wrap.innerHTML = items.map(p=>{
+    const overdue = p.fechaLimite && p.fechaLimite < todayISO();
+    return `<div class="action-plan-row">
+      <div class="apr-main"><b>${escapeHtml(p.machineName)}</b> — ${escapeHtml(p.situacion||'(sin descripción)')} <span class="badge estado-${p.estado.replace(/\s+/g,'')}" style="margin-left:6px;">${escapeHtml(p.estado)}</span></div>
+      <div>${escapeHtml(p.responsable||'sin asignar')}</div>
+      <div class="apr-due ${overdue?'overdue':''}">${p.fechaLimite ? ('Fecha límite: '+p.fechaLimite) : 'sin fecha límite'}</div>
+      <button class="btn btn-outline btn-sm" onclick="uiOpenMachine('${p.machineId}')">Abrir</button>
+    </div>`;
+  }).join('');
+}
+
+async function uiCreateMachine(){
+  const key = document.getElementById('newMachineTemplate').value;
+  const name = document.getElementById('newMachineName').value;
+  const resp = document.getElementById('newMachineResp').value;
+  const m = createMachineFromTemplate(key, name, resp);
+  await saveMachine(m);
+  renderKpis(); renderPortfolioTable(); renderActionPlan();
+  document.getElementById('newMachineName').value = "";
+  document.getElementById('newMachineResp').value = "";
+  showToast("Máquina creada");
+  await uiOpenMachine(m.id);
+}
+
+async function uiOpenMachine(id){
+  await selectMachine(id);
+  switchTab('evaluacion');
+}
+
+async function uiDuplicateMachineById(id){
+  const m = await stGetJSON(KEY_MACHINE(id));
+  if(!m) return;
+  const copy = JSON.parse(JSON.stringify(m));
+  copy.id = uid(); copy.nombre = m.nombre + " (copia)";
+  copy.createdAt = Date.now(); copy.updatedAt = Date.now();
+  copy.stepsDone = new Array(GUIDE_STEPS.length).fill(false);
+  copy.activityLog = [{ts:Date.now(), text:"Duplicado desde '"+m.nombre+"'"}];
+  await saveMachine(copy);
+  renderKpis(); renderPortfolioTable(); renderActionPlan();
+  showToast("Máquina duplicada");
+}
+async function uiDuplicateMachine(){ if(state.current) await uiDuplicateMachineById(state.current.id); }
+
+async function uiDeleteMachineById(id){
+  const m = state.index.find(x=>x.id===id);
+  if(!confirm("¿Eliminar la máquina '"+(m?m.nombre:id)+"'? Esta acción no se puede deshacer.")) return;
+  await stDelete(KEY_MACHINE(id));
+  state.index = state.index.filter(x=>x.id!==id);
+  await stSetJSON(KEY_INDEX, state.index);
+  if(state.current && state.current.id===id){ state.current = null; document.getElementById('evalContent').style.display="none"; document.getElementById('evalEmptyState').style.display="block"; }
+  renderKpis(); renderPortfolioTable(); renderActionPlan();
+  showToast("Máquina eliminada");
+}
+async function uiDeleteMachine(){ if(state.current) await uiDeleteMachineById(state.current.id); }
+
+function flushSaveNow(){
+  clearTimeout(state.saveTimer);
+  if(state.current){ saveMachine(state.current).then(()=>{ document.getElementById('saveIndicator').textContent = "Guardado ✓ "+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); renderKpis(); renderPortfolioTable(); renderActionPlan(); showToast("Guardado"); }); }
+}
+
+/* =========================================================================
+   EVALUACIÓN — RENDER
+   ========================================================================= */
+function renderEvaluacion(){
+  const has = !!state.current;
+  document.getElementById('evalEmptyState').style.display = has ? "none" : "block";
+  document.getElementById('evalContent').style.display = has ? "block" : "none";
+  if(!has) return;
+  const m = state.current;
+
+  const sel = document.getElementById('machineSelector');
+  sel.innerHTML = state.index.map(x=>`<option value="${x.id}" ${x.id===m.id?'selected':''}>${escapeHtml(x.nombre)}</option>`).join('');
+
+  document.getElementById('mNombre').value = m.nombre;
+  document.getElementById('mResponsable').value = m.responsable || "";
+  document.getElementById('mEstadoProyecto').value = m.estadoProyecto;
+  document.getElementById('saveIndicator').textContent = "Guardado ✓ " + new Date(m.updatedAt).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+
+  document.getElementById('mNombre').oninput = e=>{ m.nombre = e.target.value; scheduleSave(); };
+  document.getElementById('mResponsable').oninput = e=>{ m.responsable = e.target.value; scheduleSave(); };
+  document.getElementById('mEstadoProyecto').onchange = e=>{ m.estadoProyecto = e.target.value; logActivity(m,"Estado del proyecto cambiado a "+e.target.value); scheduleSave(); };
+
+  renderIdFields();
+  document.getElementById('limUso').value = m.limites.uso;
+  document.getElementById('limEspacio').value = m.limites.espacio;
+  document.getElementById('limTiempo').value = m.limites.tiempo;
+  renderFases();
+  renderHazards();
+  renderDistanceFields();
+  renderSistema();
+  populateComponentLibrarySelect();
+  renderEhsr();
+  renderExpediente();
+
+  document.getElementById('decision').value = m.conclusion.decision;
+  document.getElementById('firmaRealiza').value = m.conclusion.firmaRealiza;
+  document.getElementById('fechaRealiza').value = m.conclusion.fechaRealiza;
+  document.getElementById('firmaRevisa').value = m.conclusion.firmaRevisa;
+  document.getElementById('fechaRevisa').value = m.conclusion.fechaRevisa;
+  document.getElementById('firmaAprueba').value = m.conclusion.firmaAprueba;
+  document.getElementById('fechaAprueba').value = m.conclusion.fechaAprueba;
+  renderLog();
+  renderActionBar();
+}
+
+function uiSwitchMachine(id){ flushSaveNow(); selectMachine(id); }
+
+function renderIdFields(){
+  const m = state.current;
+  const wrap = document.getElementById('idFields');
+  wrap.innerHTML = ID_FIELD_DEFS.map(([key,label,wide])=>`
+    <div style="grid-column:${wide?'1 / span 2':'auto'};">
+      <label>${label}</label><input type="text" value="${escapeAttr(m.identificacion[key]||"")}" oninput="setIdField('${key}', this.value)">
+    </div>`).join('');
+}
+function setIdField(key, val){ state.current.identificacion[key] = val; scheduleSave(); }
+function setLimite(key, val){ state.current.limites[key] = val; scheduleSave(); }
+function setConclusion(key, val){ state.current.conclusion[key] = val; scheduleSave(); }
+
+function renderFases(){
+  const m = state.current;
+  document.getElementById('fasesBody').innerHTML = m.fases.map((f,i)=>`
+    <tr>
+      <td><input type="text" value="${escapeAttr(f.fase)}" onchange="state.current.fases[${i}].fase=this.value; scheduleSave();"></td>
+      <td><textarea onchange="state.current.fases[${i}].desc=this.value; scheduleSave();">${escapeHtml(f.desc)}</textarea></td>
+      <td class="row-actions"><button class="btn btn-ghost btn-sm" onclick="state.current.fases.splice(${i},1); renderFases(); scheduleSave();">✕</button></td>
+    </tr>`).join('');
+}
+function addFase(){ state.current.fases.push({fase:"", desc:""}); renderFases(); scheduleSave(); }
+
+function renderHazards(){
+  const m = state.current;
+  const filter = (document.getElementById('hazSearch').value || "").toLowerCase();
+  const tbody = document.getElementById('hazardsBody');
+  tbody.innerHTML = m.hazards.map((h,i)=>{
+    const hay = (h.cat+" "+h.situacion+" "+h.dano+" "+h.medida).toLowerCase();
+    if(filter && !hay.includes(filter)) return "";
+    return `<tr>
+      <td><input type="text" value="${escapeAttr(h.cat)}" onchange="state.current.hazards[${i}].cat=this.value; scheduleSave();"></td>
+      <td><textarea onchange="state.current.hazards[${i}].situacion=this.value; scheduleSave();">${escapeHtml(h.situacion)}</textarea></td>
+      <td><textarea onchange="state.current.hazards[${i}].dano=this.value; scheduleSave();">${escapeHtml(h.dano)}</textarea></td>
+      <td><select class="estado-${h.estado}" onchange="state.current.hazards[${i}].estado=this.value; renderHazards(); scheduleSave();">
+        <option ${h.estado==="Pendiente"?"selected":""}>Pendiente</option>
+        <option ${h.estado==="Parcial"?"selected":""}>Parcial</option>
+        <option ${h.estado==="Protegido"?"selected":""}>Protegido</option>
+      </select></td>
+      <td><textarea onchange="state.current.hazards[${i}].medida=this.value; scheduleSave();">${escapeHtml(h.medida)}</textarea></td>
+      <td><input type="text" value="${escapeAttr(h.responsable||'')}" placeholder="Nombre" onchange="state.current.hazards[${i}].responsable=this.value; scheduleSave(); renderHazards();"></td>
+      <td><input type="date" value="${escapeAttr(h.fechaLimite||'')}" onchange="state.current.hazards[${i}].fechaLimite=this.value; scheduleSave(); renderHazards();"></td>
+      <td class="row-actions"><button class="btn btn-ghost btn-sm" onclick="state.current.hazards.splice(${i},1); renderHazards(); scheduleSave();">✕</button></td>
+    </tr>`;
+  }).join('');
+  const stats = computeHazardStats(m);
+  document.getElementById('hazProgressText').textContent = `${stats.protegido} de ${stats.total} peligros protegidos`;
+  document.getElementById('hazProgressPct').textContent = stats.pct+"%";
+  document.getElementById('hazProgressBar').style.width = stats.pct+"%";
+}
+function addHazard(){ state.current.hazards.push({id:uid(),cat:"",situacion:"",dano:"",estado:"Pendiente",medida:"",responsable:"",fechaLimite:""}); renderHazards(); scheduleSave(); }
+
+function toggleLibPanel(){
+  const p = document.getElementById('libPanel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open')){ state.libPickerSelected = new Set(); renderLibPicker(); }
+}
+function renderLibPicker(){
+  const filter = (document.getElementById('libSearch').value||"").toLowerCase();
+  const byCat = {};
+  state.hazardLibrary.forEach(h=>{
+    const hay = (h.cat+" "+h.situacion+" "+h.dano).toLowerCase();
+    if(filter && !hay.includes(filter)) return;
+    (byCat[h.cat] = byCat[h.cat]||[]).push(h);
+  });
+  let html = "";
+  Object.keys(byCat).forEach(cat=>{
+    html += `<div class="lib-cat-title">${escapeHtml(cat)}</div>`;
+    byCat[cat].forEach(h=>{
+      const checked = state.libPickerSelected.has(h.id) ? "checked" : "";
+      html += `<div class="lib-item"><input type="checkbox" ${checked} onchange="toggleLibSelect('${h.id}', this.checked)">
+        <div><b>${escapeHtml(h.situacion)}</b><br><span style="color:#726b5d;">${escapeHtml(h.dano)}</span></div></div>`;
+    });
+  });
+  document.getElementById('libPickerList').innerHTML = html || `<p style="color:#8a8272;">Sin resultados.</p>`;
+}
+function toggleLibSelect(id, checked){ if(checked) state.libPickerSelected.add(id); else state.libPickerSelected.delete(id); }
+function addSelectedFromLibrary(){
+  const m = state.current;
+  state.hazardLibrary.forEach(h=>{
+    if(state.libPickerSelected.has(h.id)){
+      m.hazards.push({id:uid(), cat:h.cat, situacion:h.situacion, dano:h.dano, estado:"Pendiente", medida:h.medida||"", responsable:"", fechaLimite:""});
+    }
+  });
+  toggleLibPanel();
+  renderHazards(); scheduleSave();
+  showToast("Peligros añadidos desde la biblioteca");
+}
+
+/* ---- Calculadora de distancia EN ISO 13855 ---- */
+function renderDistanceFields(){
+  const d = state.current.distanciaCalc;
+  document.getElementById('distK').value = (d.K===1600||d.K===2000) ? String(d.K) : "custom";
+  document.getElementById('distKCustom').value = d.Kcustom || "";
+  document.getElementById('distKCustom').disabled = document.getElementById('distK').value !== "custom";
+  document.getElementById('distT').value = d.T || "";
+  document.getElementById('distD').value = d.d || "";
+  document.getElementById('distC').value = d.C || "";
+  const box = document.getElementById('distResult');
+  if(d.resultado){ box.style.display="block"; box.textContent = "S ≈ " + d.resultado + " mm"; } else { box.style.display="none"; }
+}
+function onDistKChange(){ document.getElementById('distKCustom').disabled = document.getElementById('distK').value !== "custom"; }
+function onDistDChange(){
+  const dRes = parseFloat(document.getElementById('distD').value);
+  if(!isNaN(dRes) && dRes>0){
+    let C;
+    if(dRes<=14) C=0; else if(dRes>40) C=850; else C=Math.round(8*(dRes-14));
+    document.getElementById('distC').value = C;
+  }
+}
+function computeDistance(){
+  const kSel = document.getElementById('distK').value;
+  const K = kSel==="custom" ? parseFloat(document.getElementById('distKCustom').value)||0 : parseFloat(kSel);
+  const T = parseFloat(document.getElementById('distT').value)||0;
+  const C = parseFloat(document.getElementById('distC').value)||0;
+  const S = Math.round(K*(T/1000) + C);
+  const box = document.getElementById('distResult');
+  box.style.display = "block";
+  box.textContent = "S ≈ " + Math.max(S,100) + " mm" + (S<100 ? " (elevado al mínimo normativo de 100 mm)" : "");
+  const dc = state.current.distanciaCalc;
+  dc.K = kSel==="custom"?"custom":parseFloat(kSel); dc.Kcustom=document.getElementById('distKCustom').value;
+  dc.T=T; dc.d=document.getElementById('distD').value; dc.C=C; dc.resultado=Math.max(S,100);
+  scheduleSave();
+}
+
+/* ---- SISTEMA / PLr ---- */
+function renderSistema(){
+  const m = state.current;
+  document.getElementById('sistemaBody').innerHTML = m.sistema.map((s,i)=>`
+    <tr>
+      <td><input type="text" value="${escapeAttr(s.funcion)}" onchange="state.current.sistema[${i}].funcion=this.value; scheduleSave();"></td>
+      <td><input type="text" value="${escapeAttr(s.categoria)}" onchange="state.current.sistema[${i}].categoria=this.value; scheduleSave();"></td>
+      <td style="display:flex; gap:4px; align-items:center;">
+        <input type="text" style="margin-bottom:0;" value="${escapeAttr(s.plr)}" onchange="state.current.sistema[${i}].plr=this.value; scheduleSave();">
+        <button class="btn btn-outline btn-sm" style="padding:3px 7px;" onclick="openPlrModal(${i})" title="Calcular con gráfico de riesgo">📐</button>
+      </td>
+      <td><textarea onchange="state.current.sistema[${i}].arquitectura=this.value; scheduleSave();">${escapeHtml(s.arquitectura)}</textarea></td>
+      <td><input type="text" value="${escapeAttr(s.pl)}" onchange="state.current.sistema[${i}].pl=this.value; scheduleSave();"></td>
+      <td><input type="text" value="${escapeAttr(s.conforme)}" placeholder="Sí/No" onchange="state.current.sistema[${i}].conforme=this.value; scheduleSave();"></td>
+      <td class="row-actions"><button class="btn btn-ghost btn-sm" onclick="state.current.sistema.splice(${i},1); renderSistema(); scheduleSave();">✕</button></td>
+    </tr>`).join('');
+}
+function addSistema(){ state.current.sistema.push({id:uid(),funcion:"",categoria:"",plr:"",arquitectura:"",pl:"",conforme:""}); renderSistema(); scheduleSave(); }
+
+function populateComponentLibrarySelect(){
+  document.getElementById('compLibSelect').innerHTML = state.componentLibrary.map(c=>`<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('');
+}
+function insertFromComponentLibrary(){
+  const id = document.getElementById('compLibSelect').value;
+  const c = state.componentLibrary.find(x=>x.id===id);
+  if(!c) return;
+  state.current.sistema.push({id:uid(), funcion:c.nombre, categoria:c.categoria, plr:c.plr, arquitectura:c.nota, pl:"", conforme:""});
+  renderSistema(); scheduleSave();
+}
+
+function openPlrModal(i){
+  state.plrTargetIndex = i;
+  document.querySelectorAll('#plrModal input[type=radio]').forEach(r=>r.checked=false);
+  document.getElementById('plrResultBox').textContent = "Selecciona las tres variables";
+  document.getElementById('plrModal').classList.add('open');
+}
+function closePlrModal(){ document.getElementById('plrModal').classList.remove('open'); }
+function updatePlrResult(){
+  const s = document.querySelector('#plrModal input[name=plrS]:checked');
+  const f = document.querySelector('#plrModal input[name=plrF]:checked');
+  const p = document.querySelector('#plrModal input[name=plrP]:checked');
+  const box = document.getElementById('plrResultBox');
+  if(s && f && p){
+    const key = s.value+"-"+f.value+"-"+p.value;
+    const pl = PLR_MAP[key];
+    box.textContent = "PLr sugerido: " + pl;
+  } else { box.textContent = "Selecciona las tres variables"; }
+}
+function usePlrResult(){
+  const s = document.querySelector('#plrModal input[name=plrS]:checked');
+  const f = document.querySelector('#plrModal input[name=plrF]:checked');
+  const p = document.querySelector('#plrModal input[name=plrP]:checked');
+  if(!(s&&f&&p) || state.plrTargetIndex===null) { closePlrModal(); return; }
+  const pl = PLR_MAP[s.value+"-"+f.value+"-"+p.value];
+  state.current.sistema[state.plrTargetIndex].plr = pl;
+  closePlrModal(); renderSistema(); scheduleSave();
+  showToast("PLr = "+pl+" aplicado");
+}
+
+/* ---- EHSR ---- */
+function renderEhsr(){
+  const m = state.current;
+  let html = "";
+  m.ehsr.forEach((sec, si)=>{
+    html += `<h3>${escapeHtml(sec.section)}</h3>`;
+    sec.items.forEach((it, ii)=>{
+      html += `<div class="checklist-item">
+        <select class="inline-status estado-${it.estado.replace(/\s+/g,'')}" style="width:120px; margin-bottom:0;" onchange="state.current.ehsr[${si}].items[${ii}].estado=this.value; renderEhsr(); scheduleSave();">
+          <option ${it.estado==="Pendiente"?"selected":""}>Pendiente</option>
+          <option ${it.estado==="Cumple"?"selected":""}>Cumple</option>
+          <option ${it.estado==="No aplica"?"selected":""}>No aplica</option>
+        </select>
+        <div class="ci-text" style="flex:1;"><b>${escapeHtml(it.clause)}</b> — ${escapeHtml(it.title)}
+          <input type="text" style="margin-top:4px; margin-bottom:0;" placeholder="Evidencia / referencia" value="${escapeAttr(it.evidencia)}" onchange="state.current.ehsr[${si}].items[${ii}].evidencia=this.value; scheduleSave();">
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('ehsrContainer').innerHTML = html;
+}
+
+function renderExpediente(){
+  const m = state.current;
+  document.getElementById('expedienteChecklist').innerHTML = EXPEDIENTE_ITEMS.map((txt,i)=>`
+    <div class="checklist-item">
+      <input type="checkbox" ${m.expediente[i]?"checked":""} onchange="state.current.expediente[${i}]=this.checked; scheduleSave();">
+      <div class="ci-text">${escapeHtml(txt)}</div>
+    </div>`).join('');
+}
+
+function toggleLog(){ document.getElementById('logBody').classList.toggle('open'); }
+function renderLog(){
+  const m = state.current;
+  const items = (m.activityLog||[]).slice().reverse();
+  document.getElementById('logBody').innerHTML = items.map(l=>`<div style="font-size:12px; padding:4px 0; border-bottom:1px solid var(--sand);"><b>${fmtDate(l.ts)}</b> — ${escapeHtml(l.text)}</div>`).join('') || `<p style="color:#8a8272;">Sin actividad registrada.</p>`;
+}
+
+/* =========================================================================
+   GUÍA CE
+   ========================================================================= */
+function renderGuide(){
+  const has = !!state.current;
+  document.getElementById('guideEmptyState').style.display = has ? "none":"block";
+  document.getElementById('guideContent').style.display = has ? "block":"none";
+  if(!has) return;
+  const m = state.current;
+  document.getElementById('guideMachineName').textContent = m.nombre;
+  document.getElementById('stepsContainer').innerHTML = GUIDE_STEPS.map((s,i)=>{
+    const itemsHtml = s.items.length ? `<ul>${s.items.map(it=>`<li>${escapeHtml(it)}</li>`).join('')}</ul>` : "";
+    return `<div class="step ${m.stepsDone[i]?'done':''}" id="step-${i}">
+      <div class="step-head" onclick="document.getElementById('step-${i}').classList.toggle('open')">
+        <div class="step-num">${i+1}</div><div class="step-title">${escapeHtml(s.title)}</div><div class="step-doc">${escapeHtml(s.doc)}</div>
+      </div>
+      <div class="step-body">
+        <p>${escapeHtml(s.text)}</p>${itemsHtml}
+        <p style="font-size:12px; color:#8a8272; font-style:italic;">Referencia: ${escapeHtml(s.ref)}</p>
+        <div class="step-check"><input type="checkbox" id="chk-${i}" ${m.stepsDone[i]?"checked":""} onclick="event.stopPropagation(); toggleGuideStep(${i}, this.checked)">
+          <label style="margin:0; text-transform:none; font-weight:500; color:var(--ink);" for="chk-${i}">Paso completado</label></div>
+      </div></div>`;
+  }).join('');
+  updateGuideProgress();
+}
+function toggleGuideStep(i, val){
+  state.current.stepsDone[i] = val;
+  document.getElementById('step-'+i).classList.toggle('done', val);
+  updateGuideProgress(); scheduleSave();
+}
+function updateGuideProgress(){
+  const m = state.current; if(!m) return;
+  const total = GUIDE_STEPS.length; const done = m.stepsDone.filter(Boolean).length;
+  const pct = Math.round(done/total*100);
+  document.getElementById('guideProgressText').textContent = `${done} de ${total} pasos completados`;
+  document.getElementById('guideProgressPct').textContent = pct+"%";
+  document.getElementById('guideProgressBar').style.width = pct+"%";
+}
+
+/* =========================================================================
+   NORMATIVA
+   ========================================================================= */
+function renderStandards(){
+  document.getElementById('standardsBody').innerHTML = STANDARDS_LIBRARY.map(s=>`
+    <tr><td>${escapeHtml(s.codigo)}</td><td class="std-type-${s.tipo}">${escapeHtml(s.tipo)}</td><td>${escapeHtml(s.titulo)}</td><td>${escapeHtml(s.aplica)}</td></tr>`).join('');
+}
+
+function renderHazardLibraryTab(){
+  document.getElementById('hazLibBody').innerHTML = state.hazardLibrary.map((h,i)=>`
+    <tr>
+      <td><input type="text" value="${escapeAttr(h.cat)}" onchange="state.hazardLibrary[${i}].cat=this.value; saveHazLib();"></td>
+      <td><textarea onchange="state.hazardLibrary[${i}].situacion=this.value; saveHazLib();">${escapeHtml(h.situacion)}</textarea></td>
+      <td><textarea onchange="state.hazardLibrary[${i}].dano=this.value; saveHazLib();">${escapeHtml(h.dano)}</textarea></td>
+      <td><textarea onchange="state.hazardLibrary[${i}].medida=this.value; saveHazLib();">${escapeHtml(h.medida)}</textarea></td>
+      <td class="row-actions"><button class="btn btn-ghost btn-sm" onclick="state.hazardLibrary.splice(${i},1); renderHazardLibraryTab(); saveHazLib();">✕</button></td>
+    </tr>`).join('');
+}
+function addLibHazard(){ state.hazardLibrary.push({id:uid(), cat:"", situacion:"", dano:"", medida:""}); renderHazardLibraryTab(); saveHazLib(); }
+async function saveHazLib(){ await stSetJSON(KEY_HAZLIB, state.hazardLibrary); }
+
+function renderComponentLibraryTab(){
+  document.getElementById('compLibBody').innerHTML = state.componentLibrary.map((c,i)=>`
+    <tr>
+      <td><input type="text" value="${escapeAttr(c.nombre)}" onchange="state.componentLibrary[${i}].nombre=this.value; saveCompLib();"></td>
+      <td><input type="text" value="${escapeAttr(c.categoria)}" onchange="state.componentLibrary[${i}].categoria=this.value; saveCompLib();"></td>
+      <td><input type="text" value="${escapeAttr(c.plr)}" onchange="state.componentLibrary[${i}].plr=this.value; saveCompLib();"></td>
+      <td><textarea onchange="state.componentLibrary[${i}].nota=this.value; saveCompLib();">${escapeHtml(c.nota)}</textarea></td>
+      <td class="row-actions"><button class="btn btn-ghost btn-sm" onclick="state.componentLibrary.splice(${i},1); renderComponentLibraryTab(); saveCompLib();">✕</button></td>
+    </tr>`).join('');
+}
+function addLibComponent(){ state.componentLibrary.push({id:uid(), nombre:"", categoria:"", plr:"", nota:""}); renderComponentLibraryTab(); saveCompLib(); }
+async function saveCompLib(){ await stSetJSON(KEY_COMPLIB, state.componentLibrary); }
+
+/* =========================================================================
+   DATOS — BACKUP / RESTORE / MANTENIMIENTO
+   ========================================================================= */
+async function exportAllJSON(){
+  const machines = {};
+  for(const s of state.index){ machines[s.id] = await stGetJSON(KEY_MACHINE(s.id)); }
+  const payload = {exportedAt: new Date().toISOString(), index: state.index, machines, hazardLibrary: state.hazardLibrary, componentLibrary: state.componentLibrary};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = "cm-ce-backup-"+todayISO()+".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast("Copia de seguridad descargada");
+}
+
+function importAllJSON(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data.machines || !data.index) throw new Error("Formato no reconocido");
+      if(!confirm("Esto sustituirá todas las máquinas y bibliotecas actuales por las del archivo. ¿Continuar?")) return;
+      for(const id in data.machines){ await stSetJSON(KEY_MACHINE(id), data.machines[id]); }
+      await stSetJSON(KEY_INDEX, data.index);
+      if(data.hazardLibrary) await stSetJSON(KEY_HAZLIB, data.hazardLibrary);
+      if(data.componentLibrary) await stSetJSON(KEY_COMPLIB, data.componentLibrary);
+      showToast("Importado. Recargando…");
+      setTimeout(()=>location.reload(), 900);
+    }catch(err){ alert("No se pudo importar el archivo: " + err.message); }
+  };
+  reader.readAsText(file);
+}
+
+async function rebuildIndex(){
+  const keys = await stList("cm-ce-m-");
+  const newIndex = [];
+  for(const k of keys){ const m = await stGetJSON(k); if(m) newIndex.push(machineSummary(m)); }
+  state.index = newIndex;
+  await stSetJSON(KEY_INDEX, state.index);
+  renderKpis(); renderPortfolioTable(); renderActionPlan();
+  showToast("Índice reconstruido: "+newIndex.length+" máquinas encontradas");
+}
+
+async function wipeAllData(){
+  if(!confirm("Esto eliminará TODAS las máquinas y bibliotecas guardadas aquí. ¿Seguro?")) return;
+  if(!confirm("Confirma de nuevo: esta acción no se puede deshacer.")) return;
+  for(const s of state.index){ await stDelete(KEY_MACHINE(s.id)); }
+  await stDelete(KEY_INDEX); await stDelete(KEY_HAZLIB); await stDelete(KEY_COMPLIB);
+  location.reload();
+}
+
+/* =========================================================================
+   EXPORTACIÓN A WORD (.doc vía HTML)
+   ========================================================================= */
+function downloadWordHtml(filename, bodyHtml, title){
+  const olive="#5d6758", clay="#a37047", sand="#e4d6bd";
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+  <head><meta charset="utf-8"><title>${escapeHtml(title)}</title>
+  <style>
+    body{font-family:Calibri, Arial, sans-serif; color:#2c2a26;}
+    h1{color:${olive}; font-size:20pt; border-bottom:2px solid ${clay}; padding-bottom:6px;}
+    h2{color:${olive}; font-size:14pt; border-bottom:1px solid ${sand}; padding-bottom:3px; margin-top:20px;}
+    h3{color:${olive}; font-size:12pt; margin-top:14px;}
+    table{border-collapse:collapse; width:100%; margin-bottom:10px;}
+    td, th{border:1px solid #ccc; padding:5px;}
+    th{background:${olive}; color:white; font-size:10.5pt; text-align:left;}
+    .meta{font-size:10pt; color:#726b5d;}
+  </style></head><body>${bodyHtml}</body></html>`;
+  const blob = new Blob(['\ufeff', html], {type:'application/msword'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function exportMachineWord(){
+  const m = state.current; const estadoColor = {Protegido:"#e2ecdc", Pendiente:"#f3dcd8", Parcial:"#f7e6c4", Cumple:"#e2ecdc", "No aplica":"#e6e2da"};
+  const idRows = ID_FIELD_DEFS.map(([key,label])=>`<tr><td style="background:#e4d6bd;font-weight:bold;width:30%;">${escapeHtml(label)}</td><td>${escapeHtml(m.identificacion[key]||"")}</td></tr>`).join('');
+  const fasesRows = m.fases.map(f=>`<tr><td style="font-weight:bold;width:25%;">${escapeHtml(f.fase)}</td><td>${escapeHtml(f.desc)}</td></tr>`).join('');
+  const hazardRows = m.hazards.map(h=>`<tr>
+      <td style="font-size:9.5pt;">${escapeHtml(h.cat)}</td><td style="font-size:9.5pt;">${escapeHtml(h.situacion)}</td>
+      <td style="font-size:9.5pt;">${escapeHtml(h.dano)}</td>
+      <td style="font-size:9.5pt;font-weight:bold;background:${estadoColor[h.estado]||'#fff'};text-align:center;">${escapeHtml(h.estado)}</td>
+      <td style="font-size:9.5pt;">${escapeHtml(h.medida)}</td>
+      <td style="font-size:9.5pt;">${escapeHtml(h.responsable)}${h.fechaLimite?(' ('+h.fechaLimite+')'):''}</td></tr>`).join('');
+  const sistemaRows = m.sistema.map(s=>`<tr>
+      <td style="font-size:9.5pt;">${escapeHtml(s.funcion)}</td><td style="font-size:9.5pt;text-align:center;">${escapeHtml(s.categoria)}</td>
+      <td style="font-size:9.5pt;text-align:center;">${escapeHtml(s.plr)}</td><td style="font-size:9.5pt;">${escapeHtml(s.arquitectura)}</td>
+      <td style="font-size:9.5pt;text-align:center;">${escapeHtml(s.pl)}</td><td style="font-size:9.5pt;text-align:center;">${escapeHtml(s.conforme)}</td></tr>`).join('');
+  let ehsrHtml = "";
+  m.ehsr.forEach(sec=>{ ehsrHtml += `<h3>${escapeHtml(sec.section)}</h3>`;
+    sec.items.forEach(it=>{ ehsrHtml += `<p style="margin:3px 0; font-size:10pt;"><b>${escapeHtml(it.clause)}</b> — ${escapeHtml(it.title)} : <span style="font-weight:bold; background:${estadoColor[it.estado]||'#fff'}; padding:1px 6px;">${escapeHtml(it.estado)}</span>${it.evidencia?(' — '+escapeHtml(it.evidencia)):''}</p>`; });
+  });
+  const expedienteRows = EXPEDIENTE_ITEMS.map((txt,i)=>`<p style="margin:3px 0; font-size:10pt;">${m.expediente[i]?"☑":"☐"} ${escapeHtml(txt)}</p>`).join('');
+  const stats = computeHazardStats(m);
+
+  const body = `
+    <h1>Análisis de Riesgos y Validación de Seguridad Funcional</h1>
+    <p class="meta">Cerámica Mayor · Dirección Técnica · Marcado CE — Directiva 2006/42/CE · ${escapeHtml(m.nombre)} · Generado ${new Date().toLocaleDateString('es-ES')}</p>
+    <h2>1. Identificación del conjunto</h2><table>${idRows}</table>
+    <h2>2. Límites de la máquina</h2>
+    <p><b>Uso:</b> ${escapeHtml(m.limites.uso)}</p><p><b>Espacio:</b> ${escapeHtml(m.limites.espacio)}</p><p><b>Tiempo:</b> ${escapeHtml(m.limites.tiempo)}</p>
+    <h2>3. Fases de vida</h2><table>${fasesRows}</table>
+    <h2>4. Identificación de peligros (${stats.protegido} de ${stats.total} protegidos)</h2>
+    <table><tr><th>Categoría</th><th>Situación peligrosa</th><th>Daño potencial</th><th>Estado</th><th>Medida</th><th>Responsable</th></tr>${hazardRows}</table>
+    <h2>5. Validación SISTEMA — PL por función de seguridad</h2>
+    <table><tr><th>Función</th><th>Categoría</th><th>PLr</th><th>Arquitectura</th><th>PL alcanzado</th><th>Conforme</th></tr>${sistemaRows}</table>
+    <h2>6. Checklist de Requisitos Esenciales (Anexo I, Directiva 2006/42/CE)</h2>${ehsrHtml}
+    <h2>7. Checklist del expediente técnico CE</h2>${expedienteRows}
+    <h2>8. Conclusión y firmas</h2>
+    <p><b>Decisión:</b> ${escapeHtml(m.conclusion.decision)}</p>
+    <table><tr>
+      <td style="width:33%;"><b>Realizado por</b><br>${escapeHtml(m.conclusion.firmaRealiza)}<br>${escapeHtml(m.conclusion.fechaRealiza)}</td>
+      <td style="width:33%;"><b>Revisado por</b><br>${escapeHtml(m.conclusion.firmaRevisa)}<br>${escapeHtml(m.conclusion.fechaRevisa)}</td>
+      <td style="width:34%;"><b>Aprobado por</b><br>${escapeHtml(m.conclusion.firmaAprueba)}<br>${escapeHtml(m.conclusion.fechaAprueba)}</td>
+    </tr></table>
+    <p class="meta" style="margin-top:24px;">Documento Confidencial · Cerámica Mayor</p>`;
+  downloadWordHtml("PR-DT-CE_"+m.nombre.replace(/[^a-z0-9]+/gi,'_').slice(0,50)+".doc", body, "Análisis de Riesgos CE");
+  logActivity(m, "Exportado a Word"); scheduleSave();
+}
+
+function exportDeclaracionCE(){
+  const m = state.current;
+  const body = `
+    <h1>Declaración CE de Conformidad</h1>
+    <p class="meta">Borrador generado automáticamente — revisar y completar antes de firmar (Directiva 2006/42/CE, Anexo II, Parte 1, Sección A)</p>
+    <p><b>1. Fabricante / Integrador:</b> ${escapeHtml(m.identificacion.integrador)}</p>
+    <p><b>2. Persona autorizada para elaborar el expediente técnico:</b> ${escapeHtml(m.identificacion.responsable||"[completar]")}</p>
+    <p><b>3. Descripción e identificación de la máquina/conjunto:</b> ${escapeHtml(m.identificacion.denom)}, ubicada en ${escapeHtml(m.identificacion.ubicacion||"[completar]")}.</p>
+    <p><b>4. Componentes integrados:</b> ${escapeHtml(m.identificacion.componentes)}</p>
+    <p><b>5. Declaración:</b> Por la presente se declara que la máquina arriba descrita cumple con todas las disposiciones pertinentes de la Directiva 2006/42/CE relativa a las máquinas (y del Reglamento (UE) 2023/1230 cuando resulte de aplicación).</p>
+    <p><b>6. Normas armonizadas aplicadas:</b> ${escapeHtml(m.identificacion.normativa)}</p>
+    <p><b>7. Estado del expediente técnico:</b> ${state.current.expediente.filter(Boolean).length} de ${EXPEDIENTE_ITEMS.length} documentos completados (ver checklist del expediente).</p>
+    <p style="margin-top:30px;"><b>Lugar y fecha:</b> ______________________</p>
+    <p><b>Nombre y firma:</b> ______________________</p>
+    <p class="meta" style="margin-top:24px;">Documento Confidencial · Cerámica Mayor · Borrador — no sustituye la revisión legal</p>`;
+  downloadWordHtml("Declaracion_CE_"+m.nombre.replace(/[^a-z0-9]+/gi,'_').slice(0,50)+".doc", body, "Declaración CE");
+  logActivity(m, "Borrador de Declaración CE exportado"); scheduleSave();
+}
+
+function exportPortfolioWord(){
+  const rows = state.index.map(m=>`<tr><td>${escapeHtml(m.nombre)}</td><td>${escapeHtml(MACHINE_TEMPLATES[m.tipo]?MACHINE_TEMPLATES[m.tipo].label:m.tipo)}</td>
+    <td>${escapeHtml(m.responsable||"—")}</td><td>${escapeHtml(m.estadoProyecto)}</td><td style="text-align:center;">${m.pct}%</td>
+    <td style="text-align:center;">${m.pendientes.length}</td></tr>`).join('');
+  const n=state.index.length, avgPct = n? Math.round(state.index.reduce((a,m)=>a+m.pct,0)/n):0, pendTotal = state.index.reduce((a,m)=>a+m.pendientes.length,0);
+  const body = `<h1>Portfolio de Marcado CE — Resumen</h1>
+    <p class="meta">Cerámica Mayor · Dirección Técnica · Generado ${new Date().toLocaleDateString('es-ES')}</p>
+    <p><b>Máquinas:</b> ${n} &nbsp; | &nbsp; <b>Protección media:</b> ${avgPct}% &nbsp; | &nbsp; <b>Peligros pendientes totales:</b> ${pendTotal}</p>
+    <table><tr><th>Máquina</th><th>Tipo</th><th>Responsable</th><th>Estado</th><th>% Protegido</th><th>Pendientes</th></tr>${rows}</table>
+    <p class="meta" style="margin-top:24px;">Documento Confidencial · Cerámica Mayor</p>`;
+  downloadWordHtml("Portfolio_CE_CeramicaMayor.doc", body, "Portfolio CE");
+}
+
+function exportPortfolioCSV(){
+  const header = ["Nombre","Tipo","Responsable","Estado","% Protegido","Peligros pendientes","Actualizado"];
+  const rows = state.index.map(m=>[m.nombre, MACHINE_TEMPLATES[m.tipo]?MACHINE_TEMPLATES[m.tipo].label:m.tipo, m.responsable||"", m.estadoProyecto, m.pct+"%", m.pendientes.length, new Date(m.updatedAt).toLocaleDateString('es-ES')]);
+  const csv = [header, ...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob = new Blob(['\ufeff'+csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download="Portfolio_CE_CeramicaMayor.csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+/* =========================================================================
+   ARRANQUE
+   ========================================================================= */
+initApp();
+</script>
+</body>
+</html>
